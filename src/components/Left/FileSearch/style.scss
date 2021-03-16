@@ -1,0 +1,25 @@
+.fileSearch-container {
+    .fileSearch {
+        margin: 0 10% 0 10%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        button {
+            border: none;
+        }
+        input {
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+            width: 70%;
+            &:focus {
+                box-shadow: none;
+            }
+           
+        }
+    }
+    .fileSearch-inactive {
+
+    }
+}
