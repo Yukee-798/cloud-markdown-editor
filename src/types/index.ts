@@ -1,8 +1,17 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 
 export interface IBaseProps {
     className?: string;
     children?: React.ReactNode;
+    style?:CSSProperties
+}
+
+export interface IFile {
+    id: number;
+    title: string;
+    body: string;
+    createAt: number;
+
 }
 
 

@@ -1,7 +1,149 @@
-import { Card } from 'antd';
+import { Card, Button } from 'antd';
+import FileList from './FileList/fileList'
+
 import { IBaseProps } from '../../types';
 import FileSearch from './FileSearch/fileSearch';
 import './style.scss'
+
+
+
+
+
+const files: any[] = [
+    {
+        id: 1,
+        title: 'Node.js',
+        body: 'hello world',
+        createAt: 124124125122
+
+    },
+    {
+        id: 2,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 3,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 4,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+    {
+        id: 5,
+        title: 'React Hooks',
+        body: 'hello !!!',
+        createAt: 12412124128282
+    },
+]
 
 const Left: React.FC<IBaseProps> = (props) => {
 
@@ -18,16 +160,23 @@ const Left: React.FC<IBaseProps> = (props) => {
             <Card
                 title={
                     <FileSearch 
-                        title='我的云文档'
+                        title='Cloud Document'
                         onKeySearch={onKeySearch}
                         // onChange={onChange}
                         placeholder='查找'
                     />
                 }
             >
-                123
+                <FileList 
+                    files={files}
 
+                />
             </Card>
+
+            <div className='left-footer'>
+                <Button>123</Button>
+                <Button>123</Button>
+            </div>
 
         </div>
     )

@@ -2,8 +2,8 @@ import React from 'react';
 import Left from './components/Left/left';
 import Right from './components/Right/right';
 import { Row, Col } from 'antd'
-
-import 'antd/dist/antd.css'
+import './App.scss'
+// import 'antd/dist/antd.css'
 
 
 

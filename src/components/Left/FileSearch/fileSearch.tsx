@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IBaseProps, KeyTypes } from '../../../types'
-import { SearchOutlined, CloseOutlined } from '@ant-design/icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
+
 import './style.scss'
 import { Button, Tooltip, Input } from 'antd';
 
@@ -24,7 +26,7 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
         onKeySearch
     } = props;
 
-
+    const inputRef = useRef<Input>(null);
     const [isActive, setIsActive] = useState(false);
     const [value, setValue] = useState('');
 
@@ -44,16 +46,23 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
         };
     })
 
+    useEffect(() => {
+        // 搜索激活的时候，自动让 input focus
+        if (isActive) {
+            inputRef.current?.focus();
+        }
+    }, [isActive])
+
 
     return (
         <div className='fileSearch-container'>
             {
                 !isActive && 
                 <div className='fileSearch fileSearch-inactive'>
-                    <span>{title}</span>
+                    <span className='fileSearch-title'>{title}</span>
                     <Tooltip title='search'>
                         <Button 
-                            icon={<SearchOutlined />}
+                            icon={<FontAwesomeIcon size='lg' icon={faSearch} />}
                             // shape='circle'
                             onClick={() => setIsActive(!isActive)}
                         >
@@ -68,9 +77,10 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
                         onChange={(e) => setValue(e.target.value)}
                         placeholder={placeholder}
                         value={value}
+                        ref={inputRef}
                     />
                     <Button
-                        icon={<CloseOutlined />}
+                        icon={<FontAwesomeIcon size='lg' icon={faTimes} />}
                         // shape='circle'
                         onClick={() => setIsActive(!isActive)}
                     >

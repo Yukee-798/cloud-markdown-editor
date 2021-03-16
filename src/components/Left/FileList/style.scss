@@ -1,0 +1,15 @@
+.fileList-container {
+    .fileList {
+        button {
+            // border: none;
+            box-shadow: none;
+            margin: 0 3px 0 3px;
+
+            &:focus {
+                box-shadow: none;
+            }
+
+        }
+    }
+
+}

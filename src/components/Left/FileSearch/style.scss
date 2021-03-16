@@ -4,6 +4,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        .fileSearch-title {
+            font-weight: bold;
+            font-size: 20px;
+        }
         button {
             border: none;
         }
@@ -19,7 +23,7 @@
            
         }
     }
-    .fileSearch-inactive {
+    // .fileSearch-inactive {
 
-    }
+    // }
 }
