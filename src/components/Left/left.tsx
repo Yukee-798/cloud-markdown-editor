@@ -1,5 +1,7 @@
 import { Card, Button } from 'antd';
 import FileList from './FileList/fileList'
+import {faFileUpload, faFolderPlus, faUpload} from '@fortawesome/free-solid-svg-icons'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { mookFiles } from '../../utils/dev';
 import { IBaseProps } from '../../types';
 import FileSearch from './FileSearch/fileSearch';
@@ -59,8 +61,17 @@ const Left: React.FC<IBaseProps> = (props) => {
             </Card>
 
             <div className='left-footer'>
-                <Button>New</Button>
-                <Button>Import</Button>
+                <Button
+                    icon={<FontAwesomeIcon size='lg' icon={faFolderPlus}/>}
+                >
+                   &emsp; New
+                </Button>
+
+                <Button
+                    icon={<FontAwesomeIcon size='lg' icon={faUpload}/>}
+                >
+                    &emsp;Import
+                </Button>
             </div>
 
         </div>
