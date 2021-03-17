@@ -5,14 +5,13 @@ import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 import './style.scss'
 import { Button, Tooltip, Input } from 'antd';
+import useKeyPress from '../../../hooks/useKeyPress';
 
 interface IFileSearchProps extends IBaseProps{
     title?: string;
     placeholder?: string;
     onKeySearch?: () => void;
     onChange?: () => void;
-    
-    
 }
 
 
@@ -27,24 +26,17 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
     } = props;
 
     const inputRef = useRef<Input>(null);
+    const isEsc = useKeyPress(KeyTypes.Esc);
+
     const [isActive, setIsActive] = useState(false);
     const [value, setValue] = useState('');
 
-
-    const cancelSearch = (e: KeyboardEvent): void => {
-        const { key } = e;
-        // 如果按了 Esc 则退出搜索
-        if (key === KeyTypes.Esc && isActive) {
+    useEffect(() => {
+        // 处于搜索状态并且按下 Esc
+        if (isEsc && isActive) {
             setIsActive(false);
         }
-    };
-
-    useEffect(() => {
-        document.addEventListener('keyup', cancelSearch);
-        return () => {
-            document.removeEventListener('keyup', cancelSearch)
-        };
-    })
+    }, [isEsc])
 
     useEffect(() => {
         // 搜索激活的时候，自动让 input focus

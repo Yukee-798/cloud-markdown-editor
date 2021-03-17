@@ -1,14 +1,12 @@
 import { IBaseProps, IFile, KeyTypes } from '../../../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit, faTrashAlt, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons'
 
 import './style.scss';
 import { Button, Input, List, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-
-
-
+import useKeyPress from '../../../hooks/useKeyPress';
 
 interface IFileListProps extends IBaseProps {
     files?: IFile[];
@@ -36,6 +34,9 @@ const FileList: React.FC<IFileListProps> = (props) => {
     const [isEditTitle, setIsEditTitle] = useState(false);
     const [fileList, setFileList] = useState<IFile[]>(files as IFile[]);
     const [editedId, setEditedId] = useState(0);
+    const isEsc = useKeyPress(KeyTypes.Esc);
+    const isEnter = useKeyPress(KeyTypes.Enter);
+
 
     /**
      * 1. 点击编辑按钮后，将 ListItem 的 title 变成一个 Input
@@ -67,6 +68,15 @@ const FileList: React.FC<IFileListProps> = (props) => {
         setFileList(newList)
     }
 
+
+    const handleDelete = (file: IFile) => {
+
+        if (window.confirm(`Are you sure to remove "${file.title}" ?`)) {
+            setFileList(fileList.filter((item: IFile) => item.id !== file.id));
+        }
+        
+    }
+
     useEffect(() => {
         if (isEditTitle) {
             const input = editInputRef.current;
@@ -77,19 +87,14 @@ const FileList: React.FC<IFileListProps> = (props) => {
     }, [isEditTitle]);
 
 
-    // 如果按下 Esc 则退出编辑状态
-    const cancelEdit = (ev: KeyboardEvent) => {
-        const { key } = ev;
-        if (key === KeyTypes.Esc) {
-            setIsEditTitle(false);
-        }
-    }
+ 
+  
     useEffect(() => {
-        document.addEventListener('keyup', cancelEdit);
-        return () => {
-            document.removeEventListener('keyup', cancelEdit);
+        // 处于编辑状态并且按下按键，则退出编辑状态
+        if (isEsc && isEditTitle) {
+            setIsEditTitle(false)
         }
-    })
+    }, [isEsc])
 
 
     return (
@@ -99,9 +104,11 @@ const FileList: React.FC<IFileListProps> = (props) => {
                 dataSource={fileList}
                 renderItem={(item: IFile) => (
                     <List.Item
+                        className='fileList-item'
                         key={item.id}
                         onClick={() => { onFileClick?.(item.id) }}
                     >
+                        {/* <Link></Link> */}
                         <List.Item.Meta
                             avatar={<FontAwesomeIcon icon={faMarkdown} />}
                             title={
@@ -137,6 +144,7 @@ const FileList: React.FC<IFileListProps> = (props) => {
                                     >
                                         <Button
                                             icon={<FontAwesomeIcon icon={faTrashAlt} />}
+                                            onClick={() => {handleDelete(item)}}
                                         >
                                         </Button>
                                     </Tooltip>

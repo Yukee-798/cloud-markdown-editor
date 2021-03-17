@@ -1,7 +1,9 @@
 .fileList-container {
     .fileList {
         button {
-            // border: none;
+            // z-index: -1;
+            background: transparent;
+            border: none;
             box-shadow: none;
             margin: 0 3px 0 3px;
 
@@ -9,6 +11,16 @@
                 box-shadow: none;
             }
 
+        }
+        .fileList-item {
+            padding: 12px 10px 12px 10px;
+            &:hover {
+                cursor: pointer;
+                background: rgb(215, 214, 214);
+            }
+            &:focus {
+                background: rgb(215, 214, 214);
+            }
         }
     }
 
