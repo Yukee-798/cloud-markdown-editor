@@ -2,16 +2,16 @@ import { Card, Button } from 'antd';
 import FileList from './FileList/fileList'
 import {faFileUpload, faFolderPlus, faUpload} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import { mookFiles } from '../../utils/dev';
+import { mockFiles } from '../../utils/dev';
 import { IBaseProps } from '../../types';
 import FileSearch from './FileSearch/fileSearch';
-import './style.scss'
+import './left.scss'
 
 
 
 
 
-const files = mookFiles(5);
+const files = mockFiles(5);
 
 const Left: React.FC<IBaseProps> = (props) => {
 
