@@ -7,12 +7,25 @@ export interface IBaseProps {
 }
 
 export interface IFile {
-    id: number;
+    id: string;
     title: string;
     body: string;
     createAt: number;
 
 }
+
+
+export interface ITab extends IFile {
+    tabStatus: TabStatus;
+}
+
+
+export enum TabStatus {
+    Actived = 1,
+    Default = 0,
+    UnSaved = -1
+}
+
 
 
 export enum KeyTypes {
