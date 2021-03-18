@@ -2,10 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { IBaseProps, KeyTypes } from '../../../types'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
-
-import './style.scss'
 import { Button, Tooltip, Input } from 'antd';
 import useKeyPress from '../../../hooks/useKeyPress';
+import './fileSearch.scss'
 
 interface IFileSearchProps extends IBaseProps{
     title?: string;

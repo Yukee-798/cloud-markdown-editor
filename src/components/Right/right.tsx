@@ -1,11 +1,12 @@
 import { IBaseProps } from '../../types';
-import './style.scss'
+import './right.scss'
+import TabList from './TabList/tabList';
 
 
 const Right: React.FC<IBaseProps> = (props) => {
     return (
         <div className='right-container'>
-            right
+            <TabList />
         </div>
     )
 }

@@ -2,18 +2,17 @@ import { IBaseProps, IFile, KeyTypes } from '../../../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons'
-
-import './style.scss';
 import { Button, Input, List, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import useKeyPress from '../../../hooks/useKeyPress';
+import './fileList.scss'
 
 interface IFileListProps extends IBaseProps {
     files?: IFile[];
-    onFileClick?: (id: number) => void;
-    onFileDelete?: (id: number) => void;
-    onTitleEdit?: (id: number, newTitle: string) => void;
-    onFileEdit?: (id: number) => void;
+    onFileClick?: (id: string) => void;
+    onFileDelete?: (id: string) => void;
+    onTitleEdit?: (id: string, newTitle: string) => void;
+    onFileEdit?: (id: string) => void;
 }
 
 const FileList: React.FC<IFileListProps> = (props) => {
@@ -33,7 +32,7 @@ const FileList: React.FC<IFileListProps> = (props) => {
 
     const [isEditTitle, setIsEditTitle] = useState(false);
     const [fileList, setFileList] = useState<IFile[]>(files as IFile[]);
-    const [editedId, setEditedId] = useState(0);
+    const [editedId, setEditedId] = useState('');
     const isEsc = useKeyPress(KeyTypes.Esc);
     const isEnter = useKeyPress(KeyTypes.Enter);
 
