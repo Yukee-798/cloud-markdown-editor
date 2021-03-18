@@ -1,0 +1,107 @@
+
+
+Left:
+
+需求及其实现：
+    1. 搜索
+        1.1 点击搜索按钮 dispatch(fileSearch())
+        1.2 退出搜索状态 dispatch(exitFileSearch())
+        1.3 用户在搜索框中连续输入字符的时候 (间隔时间小于 1s) 不会出现搜索结果
+        1.4 只有当输入的字符间隔了 1s 以上才会出现搜索结果
+            1.4.1 dispatch(FileFilter(inputValue))，搜索算法匹配 file.title，进行文件过滤显示，并且关键字高亮
+            1.4.2 退出搜索状态后设置 fileList = props.files
+
+
+    2. 文件重命名和文件删除 (已经实现)
+        2.1 点击重命名按钮的时候，dispatch(editFileName(id, newName))
+        2.2 点击删除按钮的时候，dispatch(deleteFile(id))
+        2.3 然后在 reducer 里面处理一下 fileList
+    
+    3. 文件导入涉及到 nodejs 暂时先放着
+
+    4. redux 中的 state 和 action
+
+        state: {
+            fileList: IFile[];
+            isFileSearch: boolean;
+        }
+
+        ActionTypes {
+            FileFilter = 'FileFilter' // 搜索过滤文件
+            EditFileName = 'editFileName',
+            DeleteFile = 'deleteFile', 
+            FileSearch = 'fileSearch', // 进入文件搜索状态
+            ExitFileSearch = 'exitFileSearch', // 退出搜索状态
+            NewFile = 'newFile', // 新建文件，涉及 nodejs 展示放着
+            ImportFiles = 'importFiles', // 导入文件，涉及 nodejs 暂时放着
+            OpenFile = 'openFile', // 参数传入 fileId，用于在点击左侧文件的 dispatch
+        }
+
+        reducer:
+            function left(state, action) {
+                const { type, payload } = action;
+
+                switch (type) {
+                    case ActionTypes.:
+                        return {...state,};
+                        
+                    case ActionTypes.:
+                        return {...state,};
+
+                    case ActionTypes.:
+                        return {...state,};
+
+                    case ActionTypes.:
+                        return {...state,};
+
+                    case ActionTypes.:
+                        return {...state,};
+
+                    case ActionTypes.:
+                        return {...state,};
+
+                    case ActionTypes.:
+                        return {...state,};
+
+                    case ActionTypes.:
+                        return {...state,};
+
+                    case ActionTypes.:
+                        return {...state,};
+                }
+            }
+    
+    5. 组件内不需要共享的 state
+
+
+Right:
+
+需求及其实现：
+    1. 点击左侧文件打开 tab
+        1.1 左侧文件点击的时候会 dispatch((openFile(id)))，进入 Right 的 reducer 保存该 id 到 openedFilesId
+        1.2 打开一个文件后
+            1.2.1 此时编辑文件，dispacth(editFile(id)) 将 id 保存到 unSavedFilesId
+            1.2.2 不编辑文件，继续打开一个新的文件，在 openedFilesId 中的此 id 被替换为新的文件 id
+            1.2.3 编辑此文件，继续打开一个新文件，unSavedFilesId 添加该文件 id，openedFilesId 添加新的 id
+
+    2. 文件修改保存
+        2.1 该文件处于被修改状态，保存该文件 dispatch(saveFile(id, newValue)，
+            同时让 left 和 right 监听，让 unSavedFilesId 移除该 id，fileList 修改该 id 文件中的 body
+
+
+    4. redux 中的 state 和 action
+
+        state: {
+            // 这两个数组是用于在 Right 中与 Left 里的 fileList 进行对照选择性渲染 tabList
+            openedFilesId: string[];
+            unSavedFilesId: string[];
+        }
+
+        ActionTypes {
+            EditFile = 'editFile', // 编辑文件，传入文件 id
+            SaveFile = 'saveFile' // 保存文件，传入文件 id 和 newValue
+
+           
+
+
+        }
