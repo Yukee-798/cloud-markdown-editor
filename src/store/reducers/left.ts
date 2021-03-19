@@ -37,6 +37,7 @@ export default function left(state: IState = initState, action: IAction) {
             };
 
         case ActionTypes.EditFileName:
+
             return {
                 ...state,
                 fileList: state.fileList.map((file: IFile) => {

@@ -32,6 +32,19 @@ export interface IAction {
     payload?: any;
 }
 
+export type IdPayload = string;
+
+export type NewNamePayload = {
+    id: string;
+    newName: string;
+}
+export type NewValuePayload = {
+    id: string;
+    newValue: string;
+}
+
+export type NewFilePayload = IdPayload;
+
 
 export enum KeyTypes {
     Esc = 'Escape',
