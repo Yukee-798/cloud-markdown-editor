@@ -6,7 +6,7 @@ export const mockFiles = (num: number) => {
         files.push({
             id: i + '',
             title: 'Node.js' + i,
-            body: 'hello world' + i,
+            body: 'hello world hello world hello worldhello world hello world hello world hello world' + i,
             createAt: 124124125122 + i
         })
     }
@@ -19,7 +19,7 @@ export const mockTabs = (num: number) => {
         tabs.push({
             id: i + '',
             title: 'Node.js' + i,
-            body: 'hello world' + i,
+            body: 'hello world hello worldhello world hello world hello world hello world' + i,
             createAt: 124124125122 + i,
             tabStatus: 0
         })
