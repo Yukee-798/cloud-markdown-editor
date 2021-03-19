@@ -3,7 +3,7 @@ import React, { CSSProperties } from "react";
 export interface IBaseProps {
     className?: string;
     children?: React.ReactNode;
-    style?:CSSProperties
+    style?: CSSProperties
 }
 
 export interface IFile {
@@ -27,8 +27,27 @@ export enum TabStatus {
 }
 
 
+export interface IAction {
+    type: ActionTypes;
+    payload?: any;
+}
+
 
 export enum KeyTypes {
     Esc = 'Escape',
     Enter = 'Enter'
+}
+
+export enum ActionTypes {
+    FileFilter = 'fileFilter', // 搜索过滤文件
+    EditFileName = 'editFileName',
+    DeleteFile = 'deleteFile',
+    FileSearch = 'fileSearch', // 进入文件搜索状态
+    ExitFileSearch = 'exitFileSearch', // 退出搜索状态
+    NewFile = 'newFile', // 新建文件，涉及 nodejs 展示放着
+    ImportFiles = 'importFiles', // 导入文件，涉及 nodejs 暂时放着
+
+    OpenFile = 'openFile', // 参数传入 fileId，用于在点击左侧文件的 dispatch
+    EditFile = 'editFile', // 编辑文件，传入文件 id
+    SaveFile = 'saveFile', // 保存文件，传入文件 id 和 newValue
 }
