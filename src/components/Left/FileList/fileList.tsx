@@ -1,18 +1,33 @@
-import { IBaseProps, IFile, KeyTypes } from '../../../types';
+import { IBaseProps, IdPayload, IFile, KeyTypes, NewFilePayload, NewNamePayload } from '../../../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons'
 import { Button, Input, List, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux'
 import useKeyPress from '../../../hooks/useKeyPress';
+import { IRootState } from '../../../store/reducers/rootReducer';
+import { deleteFile, editFileName, exitFileSearch, fileSearch, newFile, openFile } from '../../../store/actions/left';
 import './fileList.scss'
 
-interface IFileListProps extends IBaseProps {
-    files?: IFile[];
-    onFileClick?: (id: string) => void;
-    onFileDelete?: (id: string) => void;
-    onTitleEdit?: (id: string, newTitle: string) => void;
-    onFileEdit?: (id: string) => void;
+interface IMappedState {
+    fileList: IFile[];
+    // isSearch: boolean;
+}
+
+interface IMappedAction {
+    fileSearch: () => void;
+    exitFileSearch: () => void;
+    deleteFile: (id: IdPayload) => void;
+    editFileName: (editedFile: NewNamePayload) => void;
+    openFile: (id: IdPayload) => void;
+    newFile: (initName: NewFilePayload) => void;
+}
+
+
+interface IFileListProps extends IBaseProps, IMappedAction, IMappedState {
+    searchKey: string | undefined;
 }
 
 const FileList: React.FC<IFileListProps> = (props) => {
@@ -20,18 +35,22 @@ const FileList: React.FC<IFileListProps> = (props) => {
 
 
     const {
-        files,
-        onFileClick,
-        onFileDelete,
-        onTitleEdit,
-        onFileEdit 
+        // state
+        fileList,
+
+        // action
+        deleteFile,
+        editFileName,
+        exitFileSearch,
+        fileSearch,
+        newFile,
+        openFile,
     } = props;
 
-    const editInputRef = useRef(new Input({defaultValue:''}));
-
+    const editInputRef = useRef(new Input({ defaultValue: '' }));
 
     const [isEditTitle, setIsEditTitle] = useState(false);
-    const [fileList, setFileList] = useState<IFile[]>(files as IFile[]);
+    // const [fileList, setFileList] = useState<IFile[]>(files as IFile[]);
     const [editedId, setEditedId] = useState('');
     const isEsc = useKeyPress(KeyTypes.Esc);
     const isEnter = useKeyPress(KeyTypes.Enter);
@@ -42,6 +61,7 @@ const FileList: React.FC<IFileListProps> = (props) => {
      * 2. Input 的默认值为 item.title 并且聚焦和选中了所有字符串
      * 3. Input 失去焦点后自动将 Input 的 value 设置给 item.title
      */
+
     const handleEditTitle = (file: IFile) => {
         setIsEditTitle(true);
         setEditedId(file.id);
@@ -52,28 +72,24 @@ const FileList: React.FC<IFileListProps> = (props) => {
         setIsEditTitle(false);
 
         const input = editInputRef.current;
-        const newList: IFile[] = fileList?.map((file) => {
+
+        // 失去焦点的时候 
+        fileList.forEach((file: IFile) => {
             if (file.id === editedId) {
                 if (!(input.state.value === file.title)) {
                     if (window.confirm(`Rename to "${input.state.value}" ?`)) {
-                        return { ...file, title: input.state.value };
+                        editFileName({id: file.id, newName: input.state.value});
                     }
                 }
-                return file;
             }
-            return file;
-        });
-        
-        setFileList(newList)
+        })
     }
 
-
     const handleDelete = (file: IFile) => {
-
         if (window.confirm(`Are you sure to remove "${file.title}" ?`)) {
-            setFileList(fileList.filter((item: IFile) => item.id !== file.id));
+            deleteFile(file.id);
         }
-        
+
     }
 
     useEffect(() => {
@@ -86,8 +102,8 @@ const FileList: React.FC<IFileListProps> = (props) => {
     }, [isEditTitle]);
 
 
- 
-  
+
+
     useEffect(() => {
         // 处于编辑状态并且按下按键，则退出编辑状态
         if (isEsc && isEditTitle) {
@@ -105,14 +121,12 @@ const FileList: React.FC<IFileListProps> = (props) => {
                     <List.Item
                         className='fileList-item'
                         key={item.id}
-                        onClick={() => { onFileClick?.(item.id) }}
+                        onClick={() => { }}
                     >
                         {/* <Link></Link> */}
                         <List.Item.Meta
                             avatar={<FontAwesomeIcon icon={faMarkdown} />}
                             title={
-
-
                                 isEditTitle && item.id === editedId ?
                                     <Input
                                         ref={editInputRef}
@@ -120,6 +134,7 @@ const FileList: React.FC<IFileListProps> = (props) => {
                                         defaultValue={item.title}
                                     /> : item.title
                             }
+                            description={item.body.substring(0, 50)}
                         />
 
                         {
@@ -143,7 +158,7 @@ const FileList: React.FC<IFileListProps> = (props) => {
                                     >
                                         <Button
                                             icon={<FontAwesomeIcon icon={faTrashAlt} />}
-                                            onClick={() => {handleDelete(item)}}
+                                            onClick={() => { handleDelete(item) }}
                                         >
                                         </Button>
                                     </Tooltip>
@@ -158,4 +173,20 @@ const FileList: React.FC<IFileListProps> = (props) => {
     )
 }
 
-export default FileList;
+
+const mapStateToProps = (state: IRootState): IMappedState => ({
+    fileList: state.left.fileList,
+    // isSearch: state.left.isFileSearch
+});
+
+const mapDispatchToProps = (dispatch: Dispatch): IMappedAction => ({
+    fileSearch: () => dispatch(fileSearch()),
+    deleteFile: (id: IdPayload) => dispatch(deleteFile(id)),
+    editFileName: (editedFile: NewNamePayload) => dispatch(editFileName(editedFile)),
+    exitFileSearch: () => dispatch(exitFileSearch()),
+    newFile: (initName: NewFilePayload) => dispatch(newFile(initName)),
+    openFile: (id: IdPayload) => dispatch(openFile(id))
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FileList);

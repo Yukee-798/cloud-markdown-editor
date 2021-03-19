@@ -5,7 +5,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { mockFiles } from '../../utils/dev';
 import { IBaseProps } from '../../types';
 import FileSearch from './FileSearch/fileSearch';
+import { Dispatch } from 'redux';
+import { connect } from 'react-redux';
+import { useRef, useState } from 'react';
+
 import './left.scss'
+
 
 
 
@@ -13,30 +18,33 @@ import './left.scss'
 
 const files = mockFiles(5);
 
-const Left: React.FC<IBaseProps> = (props) => {
 
-    const onKeySearch = () => {
 
-    }
+/**
+ * 
+ * 需求：
+ * 1. 搜索框
+ * 2. 文件树
+ *      2.1 点击文件后，会在 tabList 中 append 一个
+ *
+ */
+const Left: React.FC<IBaseProps> = () => {
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const [searchKey, setSearchKey] = useState<string>();
+    const timerRef = useRef<any>();
 
-    }
 
-    const onFileClick = () => {
+    /**
+     * 需求：
+     *  1. 监听 value 的变化，如果前一次变化后超过 0.5s 未更新值，则把 searchKey 设置为该值
+     *  
+     */
+    const onSearchChange = (value: string) => {
 
-    }
-
-    const onFileDelete = () => {
-
-    }
-
-    const onFileEdit = () => {
-
-    }
-
-    const onTitleEdit = () => {
-
+        clearTimeout(timerRef.current)
+        timerRef.current = setTimeout(() => {
+            setSearchKey(value);
+        }, 500)
     }
 
     return (
@@ -45,18 +53,13 @@ const Left: React.FC<IBaseProps> = (props) => {
                 title={
                     <FileSearch
                         title='Cloud Document'
-                        onKeySearch={onKeySearch}
-                        // onChange={onChange}
                         placeholder='查找'
+                        onChange={onSearchChange}
                     />
                 }
             >
-                <FileList
-                    files={files}
-                    onFileClick={onFileClick}
-                    onFileDelete={onFileDelete}
-                    onTitleEdit={onTitleEdit}
-                    onFileEdit={onFileEdit}
+                <FileList 
+                    searchKey={searchKey}
                 />
             </Card>
 
@@ -78,4 +81,4 @@ const Left: React.FC<IBaseProps> = (props) => {
     )
 }
 
-export default Left;
+export default connect()(Left);

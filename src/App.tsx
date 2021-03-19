@@ -1,4 +1,3 @@
-import React from 'react';
 import Left from './components/Left/left';
 import Right from './components/Right/right';
 import { Row, Col } from 'antd'
@@ -9,6 +8,7 @@ import './App.scss'
 
 
 function App() {
+
   return (
     <div className="App">
       <Row>
