@@ -6,25 +6,22 @@ export interface IBaseProps {
     style?: CSSProperties
 }
 
+
+
 export interface IFile {
     id: string;
     title: string;
     body: string;
     createAt: number;
-
+    status: {
+        isOpen: boolean;
+        isUnsave: boolean;
+        isActive: boolean;
+    }
 }
 
 
-export interface ITab extends IFile {
-    tabStatus: TabStatus;
-}
-
-
-export enum TabStatus {
-    Actived = 1,
-    Default = 0,
-    UnSaved = -1
-}
+export interface ITab extends IFile {}
 
 
 export interface IAction {
@@ -52,7 +49,7 @@ export enum KeyTypes {
 }
 
 export enum ActionTypes {
-
+    CloseTab = 'closeTab',
     UpdateFilterIds = 'updateFilterIds', // 搜索过滤文件
     EditFileName = 'editFileName',
     DeleteFile = 'deleteFile',
