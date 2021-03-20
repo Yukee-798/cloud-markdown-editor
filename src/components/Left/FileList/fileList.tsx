@@ -8,17 +8,19 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux'
 import useKeyPress from '../../../hooks/useKeyPress';
 import { IRootState } from '../../../store/reducers/rootReducer';
-import { deleteFile, editFileName, exitFileSearch, fileSearch, newFile, openFile } from '../../../store/actions/left';
+import { deleteFile, editFileName, updateFilterIds, newFile, openFile } from '../../../store/actions/left';
+import {difference} from '../../../utils/index'
+import Fuse from 'fuse.js'
 import './fileList.scss'
 
 interface IMappedState {
     fileList: IFile[];
-    // isSearch: boolean;
+    filterIds: string[];
+    isSearch: boolean;
 }
 
 interface IMappedAction {
-    fileSearch: () => void;
-    exitFileSearch: () => void;
+    updateFilterIds: (ids: IdPayload[]) => void;
     deleteFile: (id: IdPayload) => void;
     editFileName: (editedFile: NewNamePayload) => void;
     openFile: (id: IdPayload) => void;
@@ -32,26 +34,27 @@ interface IFileListProps extends IBaseProps, IMappedAction, IMappedState {
 
 const FileList: React.FC<IFileListProps> = (props) => {
 
-
-
     const {
         // state
         fileList,
+        isSearch,
 
         // action
         deleteFile,
         editFileName,
-        exitFileSearch,
-        fileSearch,
+        searchKey,
         newFile,
         openFile,
+        updateFilterIds,
+        filterIds
     } = props;
 
     const editInputRef = useRef(new Input({ defaultValue: '' }));
 
     const [isEditTitle, setIsEditTitle] = useState(false);
-    // const [fileList, setFileList] = useState<IFile[]>(files as IFile[]);
     const [editedId, setEditedId] = useState('');
+    // 表示fileList 正渲染的 list
+    const [list, setList] = useState<IFile[]>([]);
     const isEsc = useKeyPress(KeyTypes.Esc);
     const isEnter = useKeyPress(KeyTypes.Enter);
 
@@ -62,35 +65,48 @@ const FileList: React.FC<IFileListProps> = (props) => {
      * 3. Input 失去焦点后自动将 Input 的 value 设置给 item.title
      */
 
+
+    useEffect(() => {
+        if (searchKey !== undefined) {
+
+            const option = {
+                keys: ['title', 'body'],
+                includeScore: true
+            };
+            const fuse = new Fuse(fileList, option);
+            const res: string[] = fuse.search(searchKey).map(({item}) => {
+                return item.id;
+            })
+
+            updateFilterIds(difference(fileList.map((file: IFile) => file.id), res));
+            
+        }
+    }, [searchKey])
+
+
     const handleEditTitle = (file: IFile) => {
         setIsEditTitle(true);
         setEditedId(file.id);
     }
 
 
-    const handleBlur = () => {
+    const handleBlur = (file: IFile) => {
         setIsEditTitle(false);
 
         const input = editInputRef.current;
 
         // 失去焦点的时候 
-        fileList.forEach((file: IFile) => {
-            if (file.id === editedId) {
-                if (!(input.state.value === file.title)) {
-                    if (window.confirm(`Rename to "${input.state.value}" ?`)) {
-                        editFileName({id: file.id, newName: input.state.value});
-                    }
-                }
-            }
-        })
+        if (!(input.state.value === file.title) && window.confirm(`Rename to "${input.state.value}" ?`)) {
+            editFileName({ id: file.id, newName: input.state.value });
+        }
     }
 
     const handleDelete = (file: IFile) => {
         if (window.confirm(`Are you sure to remove "${file.title}" ?`)) {
             deleteFile(file.id);
         }
-
     }
+
 
     useEffect(() => {
         if (isEditTitle) {
@@ -102,7 +118,12 @@ const FileList: React.FC<IFileListProps> = (props) => {
     }, [isEditTitle]);
 
 
-
+    useEffect(() => {
+        // 处于编辑状态并且按下回车，则让 input 失去焦点
+        if (isEnter && isEditTitle) {
+            editInputRef.current.blur();
+        }
+    }, [isEnter])
 
     useEffect(() => {
         // 处于编辑状态并且按下按键，则退出编辑状态
@@ -112,11 +133,22 @@ const FileList: React.FC<IFileListProps> = (props) => {
     }, [isEsc])
 
 
+
+    useEffect(() => {
+        setList(fileList.filter((file: IFile) => !filterIds.includes(file.id)));
+    }, [filterIds, fileList]);
+
+    useEffect(() => {
+        if (!isSearch) {
+            setList(fileList);
+        }
+    }, [isSearch])
+
     return (
         <div className='fileList-container'>
             <List
                 className='fileList'
-                dataSource={fileList}
+                dataSource={list}
                 renderItem={(item: IFile) => (
                     <List.Item
                         className='fileList-item'
@@ -130,7 +162,7 @@ const FileList: React.FC<IFileListProps> = (props) => {
                                 isEditTitle && item.id === editedId ?
                                     <Input
                                         ref={editInputRef}
-                                        onBlur={handleBlur}
+                                        onBlur={() => { handleBlur(item) }}
                                         defaultValue={item.title}
                                     /> : item.title
                             }
@@ -176,17 +208,16 @@ const FileList: React.FC<IFileListProps> = (props) => {
 
 const mapStateToProps = (state: IRootState): IMappedState => ({
     fileList: state.left.fileList,
-    // isSearch: state.left.isFileSearch
+    isSearch: state.left.isFileSearch,
+    filterIds: state.left.filterIds
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): IMappedAction => ({
-    fileSearch: () => dispatch(fileSearch()),
     deleteFile: (id: IdPayload) => dispatch(deleteFile(id)),
     editFileName: (editedFile: NewNamePayload) => dispatch(editFileName(editedFile)),
-    exitFileSearch: () => dispatch(exitFileSearch()),
     newFile: (initName: NewFilePayload) => dispatch(newFile(initName)),
-    openFile: (id: IdPayload) => dispatch(openFile(id))
-
+    openFile: (id: IdPayload) => dispatch(openFile(id)),
+    updateFilterIds: (ids: IdPayload[]) => dispatch(updateFilterIds(ids)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FileList);

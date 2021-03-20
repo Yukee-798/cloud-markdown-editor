@@ -35,7 +35,7 @@ const TabList = () => {
 
     const handleEdit = (targetKey: any, action: 'remove' | 'add') => {
         if (action === 'remove') {
-            setTabList(tabList.filter((tab: ITab) => !(tab.id === targetKey)))
+            setTabList(tabList.filter((tab: ITab) => !(tab.id === targetKey)));
         }
     }
 

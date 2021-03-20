@@ -1,23 +1,13 @@
 import { Card, Button } from 'antd';
 import FileList from './FileList/fileList'
-import {faFileUpload, faFolderPlus, faUpload} from '@fortawesome/free-solid-svg-icons'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import { mockFiles } from '../../utils/dev';
+import { faFolderPlus, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IBaseProps } from '../../types';
 import FileSearch from './FileSearch/fileSearch';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { useRef, useState } from 'react';
-
 import './left.scss'
-
-
-
-
-
-
-const files = mockFiles(5);
-
 
 
 /**
@@ -43,6 +33,7 @@ const Left: React.FC<IBaseProps> = () => {
 
         clearTimeout(timerRef.current)
         timerRef.current = setTimeout(() => {
+            console.log(value);
             setSearchKey(value);
         }, 500)
     }
@@ -58,20 +49,20 @@ const Left: React.FC<IBaseProps> = () => {
                     />
                 }
             >
-                <FileList 
+                <FileList
                     searchKey={searchKey}
                 />
             </Card>
 
             <div className='left-footer'>
                 <Button
-                    icon={<FontAwesomeIcon size='lg' icon={faFolderPlus}/>}
+                    icon={<FontAwesomeIcon size='lg' icon={faFolderPlus} />}
                 >
-                   &emsp; New
+                    &emsp; New
                 </Button>
 
                 <Button
-                    icon={<FontAwesomeIcon size='lg' icon={faUpload}/>}
+                    icon={<FontAwesomeIcon size='lg' icon={faUpload} />}
                 >
                     &emsp;Import
                 </Button>

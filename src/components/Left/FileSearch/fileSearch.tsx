@@ -20,6 +20,7 @@ interface IMappedAction {
 }
 
 interface IFileSearchProps extends IBaseProps, IMappedState, IMappedAction {
+    
     title?: string;
     placeholder?: string;
     onChange?: (value: string) => void;
@@ -42,6 +43,8 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+
         const value = e.target.value;
         onChange?.(value);
         setValue(value);
@@ -58,6 +61,8 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
         // 搜索激活的时候，自动让 input focus
         if (isSearch) {
             inputRef.current?.focus();
+        } else {
+            setValue('');
         }
     }, [isSearch])
 
