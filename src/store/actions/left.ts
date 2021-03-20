@@ -1,10 +1,10 @@
-import { ActionTypes, IdPayload, NewFilePayload, NewNamePayload } from "../../types";
+import { ActionTypes, IdPayload, IFile, NewFilePayload, NewNamePayload } from "../../types";
 
 
 
-export type FileFilterCR = (payload: string) => {
-    type: ActionTypes.FileFilter,
-    payload: IdPayload
+export type updateFilterIdsCR = (payload: string[]) => {
+    type: ActionTypes.UpdateFilterIds,
+    payload: IdPayload[]
 };
 
 export type EditFileNameCR = (payload: NewNamePayload) => {
@@ -36,12 +36,8 @@ export type NewFileCR = (payload: NewFilePayload) => {
     payload: NewFilePayload
 }
 
-/**
- * 
- * @param payload FileSearch InputValue
- * @returns action
- */
-export const fileFilter: FileFilterCR = (payload: IdPayload) => ({ type: ActionTypes.FileFilter, payload });
+
+export const updateFilterIds: updateFilterIdsCR = (payload: IdPayload[]) => ({ type: ActionTypes.UpdateFilterIds, payload });
 
 export const editFileName: EditFileNameCR = (payload: NewNamePayload) => ({ type: ActionTypes.EditFileName, payload });
 export const deleteFile: DeleteFileCR = (payload: IdPayload) => ({ type: ActionTypes.DeleteFile, payload });

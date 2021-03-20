@@ -3,6 +3,9 @@ import { mockFiles } from '../../utils/dev';
 
 export interface IState {
     fileList: IFile[];
+
+    // 被过滤的 file id
+    filterIds: string[];
     isFileSearch: boolean;
 }
 
@@ -11,12 +14,20 @@ const mockData = mockFiles(5);
 
 const initState: IState = {
     fileList: mockData,
+    filterIds: [],
     isFileSearch: false,
 }
 
 export default function left(state: IState = initState, action: IAction) {
     const { type, payload } = action;
     switch (type) {
+
+        case ActionTypes.UpdateFilterIds: 
+            return {
+                ...state,
+                filterIds: [...payload]
+            }
+
         case ActionTypes.FileSearch:
             return {
                 ...state,
@@ -58,6 +69,7 @@ export default function left(state: IState = initState, action: IAction) {
                     return file;
                 })
             };
+        
 
         default:
             return state;

@@ -52,7 +52,8 @@ export enum KeyTypes {
 }
 
 export enum ActionTypes {
-    FileFilter = 'fileFilter', // 搜索过滤文件
+
+    UpdateFilterIds = 'updateFilterIds', // 搜索过滤文件
     EditFileName = 'editFileName',
     DeleteFile = 'deleteFile',
     FileSearch = 'fileSearch', // 进入文件搜索状态
