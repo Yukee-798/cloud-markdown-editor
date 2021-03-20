@@ -1,12 +1,14 @@
-import { IAction, IFile, ActionTypes } from '../../types'
-import { mockFiles } from '../../utils/dev';
+import { IAction, IFile, ActionTypes } from '../types'
+import { mockFiles } from '../utils/dev';
 
 export interface IState {
     fileList: IFile[];
-
     // 被过滤的 file id
     filterIds: string[];
     isFileSearch: boolean;
+
+    openedFilesId: string[];
+    unSavedFilesId: string[];
 }
 
 
@@ -16,13 +18,36 @@ const initState: IState = {
     fileList: mockData,
     filterIds: [],
     isFileSearch: false,
+
+    openedFilesId: [],
+    unSavedFilesId: []
 }
 
 export default function left(state: IState = initState, action: IAction) {
     const { type, payload } = action;
     switch (type) {
 
-        case ActionTypes.UpdateFilterIds: 
+        case ActionTypes.OpenFile:
+            return {
+                ...state,
+                openedFileId: [...state.openedFilesId, payload]
+            }
+
+        case ActionTypes.CloseTab:
+
+            return {
+                ...state,
+                openedFilesId: state.openedFilesId.filter((id) => id !== payload),
+                unSavedFilesId: state.unSavedFilesId.filter((id) => id !== payload)
+            }
+        case ActionTypes.EditFile:
+            return {
+                ...state,
+                unSavedFilesId: [...state.unSavedFilesId, payload]
+            };
+
+
+        case ActionTypes.UpdateFilterIds:
             return {
                 ...state,
                 filterIds: [...payload]
@@ -67,7 +92,9 @@ export default function left(state: IState = initState, action: IAction) {
                         return { ...file, body: payload.newValue };
                     }
                     return file;
-                })
+                }),
+                unSavedFilesId: state.unSavedFilesId.filter((id) => id !== payload.id)
+
             };
         
 
