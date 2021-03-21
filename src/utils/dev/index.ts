@@ -37,7 +37,7 @@ export const mockFiles = (num: number) => {
         },
         {
             id: '3',
-            body: '0',
+            body: '## webpack \n test  webpack  webpack webpack webpack webpack webpack webpack webpack webpack webpack webpack webpack',
             title: 'webpack',
             createAt: 1232142124124,
             status: {
@@ -45,7 +45,40 @@ export const mockFiles = (num: number) => {
                 isUnsave: false,
                 isActive: false
             }
-        }
+        },
+        {
+            id: '4',
+            body: '## React.js \n test test testest testtest testtest testtest testtest testtest testtest testt testtest testtest testtest testtest testtest testtest testtest testtest testtest testtest test',
+            title: 'React.js',
+            createAt: 1231241241214,
+            status: {
+                isOpen: true,
+                isUnsave: false,
+                isActive: false
+            }
+        },
+        {
+            id: '5',
+            body: '## Vue.js \n 12312 Vue vvvvvvvvvvvvsv test testtesttesttesttesttesttesttesttesttesttest',
+            title: 'Vue.js',
+            createAt: 1231241241214,
+            status: {
+                isOpen: true,
+                isUnsave: false,
+                isActive: false
+            }
+        },
+        {
+            id: '6',
+            body: '## Next.js \n asd 1asd next 3412412e2next next next next next next next next next next next next next next next ',
+            title: 'Next.js',
+            createAt: 1231241241214,
+            status: {
+                isOpen: true,
+                isUnsave: false,
+                isActive: false
+            }
+        },
     ];
     // for (let i = 0; i < num; i++) {
     //     files.push({
