@@ -5,22 +5,16 @@ import { Button, Tooltip, Input } from 'antd';
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import useKeyPress from '../../../hooks/useKeyPress';
-import { IBaseProps, KeyTypes } from '../../../types'
-import { IRootState } from '../../../store/reducers/rootReducer';
-import { exitFileSearch, fileSearch } from '../../../store/actions/left';
+import { ActionTypes, IAllDispatch, IBaseProps, KeyTypes, StateTypes } from '../../../types'
+import { exitFileSearch, fileSearch } from '../../../store/actions';
+import { IState } from '../../../store/reducer';
 import './fileSearch.scss'
 
-interface IMappedState {
-    isSearch: boolean;
-}
+interface IMappedState extends Pick<IState, StateTypes.IsFileSearch> {}
 
-interface IMappedAction {
-    fileSearch: () => void;
-    exitFileSearch: () => void;
-}
+interface IMappedAction extends Pick<IAllDispatch, ActionTypes.FileSearch | ActionTypes.ExitFileSearch> {}
 
 interface IFileSearchProps extends IBaseProps, IMappedState, IMappedAction {
-    
     title?: string;
     placeholder?: string;
     onChange?: (value: string) => void;
@@ -31,7 +25,7 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
     const {
         title,
         placeholder,
-        isSearch,
+        isFileSearch,
         exitFileSearch,
         fileSearch,
         onChange
@@ -52,25 +46,25 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
 
     useEffect(() => {
         // 处于搜索状态并且按下 Esc
-        if (isEsc && isSearch) {
+        if (isEsc && isFileSearch) {
             exitFileSearch();
         }
     }, [isEsc])
 
     useEffect(() => {
         // 搜索激活的时候，自动让 input focus
-        if (isSearch) {
+        if (isFileSearch) {
             inputRef.current?.focus();
         } else {
             setValue('');
         }
-    }, [isSearch])
+    }, [isFileSearch])
 
 
     return (
         <div className='fileSearch-container'>
             {
-                !isSearch &&
+                !isFileSearch &&
                 <div className='fileSearch fileSearch-inactive'>
                     <span className='fileSearch-title'>{title}</span>
                     <Tooltip title='search'>
@@ -84,7 +78,7 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
                 </div>
             }
             {
-                isSearch &&
+                isFileSearch &&
                 <div className='fileSearch fileSearch-active'>
                     <Input
                         onChange={handleChange}
@@ -105,8 +99,8 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
     )
 }
 
-const mapStateToProps = (state: IRootState): IMappedState => ({
-    isSearch: state.left.isFileSearch
+const mapStateToProps = (state: IState): IMappedState => ({
+    isFileSearch: state.isFileSearch
 });
 const mapDispatchToProps = (dispatch: Dispatch): IMappedAction => ({
     fileSearch: () => dispatch(fileSearch()),

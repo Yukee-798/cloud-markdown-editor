@@ -1,4 +1,4 @@
-import { IBaseProps, IdPayload, IFile, KeyTypes, NewFilePayload, NewNamePayload } from '../../../types';
+import { ActionTypes, IBaseProps, IdPayload, IFile, IAllDispatch, KeyTypes, NewFilePayload, NewNamePayload, StateTypes } from '../../../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { faMarkdown } from '@fortawesome/free-brands-svg-icons'
@@ -7,46 +7,58 @@ import { useEffect, useRef, useState } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux'
 import useKeyPress from '../../../hooks/useKeyPress';
-import { IRootState } from '../../../store/reducers/rootReducer';
-import { deleteFile, editFileName, updateFilterIds, newFile, openFile } from '../../../store/actions/left';
-import {difference} from '../../../utils/index'
+import { deleteFile, editFileName, updateFilterIds, newFile, openFile, updateActivedId } from '../../../store/actions';
+import { difference } from '../../../utils/index'
 import Fuse from 'fuse.js'
+import { IState } from '../../../store/reducer';
 import './fileList.scss'
 
-interface IMappedState {
-    fileList: IFile[];
-    filterIds: string[];
-    isSearch: boolean;
-}
 
-interface IMappedAction {
-    updateFilterIds: (ids: IdPayload[]) => void;
-    deleteFile: (id: IdPayload) => void;
-    editFileName: (editedFile: NewNamePayload) => void;
-    openFile: (id: IdPayload) => void;
-    newFile: (initName: NewFilePayload) => void;
-}
+interface IMappedState extends Pick<
+    IState,
+    StateTypes.FileList |
+    StateTypes.IsFileSearch |
+    StateTypes.FilterIds |
+    StateTypes.OpenedFilesId |
+    StateTypes.ActivedId
+> { }
 
+interface IMappedDispatch extends Pick<
+    IAllDispatch,
+    ActionTypes.UpdateActivedId |
+    ActionTypes.EditFileName |
+    ActionTypes.DeleteFile |
+    ActionTypes.NewFile |
+    ActionTypes.OpenFile |
+    ActionTypes.UpdateFilterIds
+> { }
 
-interface IFileListProps extends IBaseProps, IMappedAction, IMappedState {
+interface IFileListProps extends IBaseProps, IMappedState, IMappedDispatch {
     searchKey: string | undefined;
 }
 
 const FileList: React.FC<IFileListProps> = (props) => {
 
+
+
     const {
+
+        // props
+        searchKey,
+
         // state
         fileList,
-        isSearch,
+        isFileSearch,
+        filterIds,
+        openedFilesId,
 
         // action
-        deleteFile,
+        updateActivedId,
         editFileName,
-        searchKey,
+        deleteFile,
         newFile,
         openFile,
-        updateFilterIds,
-        filterIds
+        updateFilterIds
     } = props;
 
     const editInputRef = useRef(new Input({ defaultValue: '' }));
@@ -73,13 +85,13 @@ const FileList: React.FC<IFileListProps> = (props) => {
                 keys: ['title', 'body'],
                 includeScore: true
             };
-            const fuse = new Fuse(fileList, option);
-            const res: string[] = fuse.search(searchKey).map(({item}) => {
+            const fuse = new Fuse(fileList as IFile[], option);
+            const res: string[] = fuse.search(searchKey).map(({ item }) => {
                 return item.id;
             })
 
             updateFilterIds(difference(fileList.map((file: IFile) => file.id), res));
-            
+
         }
     }, [searchKey])
 
@@ -104,6 +116,21 @@ const FileList: React.FC<IFileListProps> = (props) => {
     const handleDelete = (file: IFile) => {
         if (window.confirm(`Are you sure to remove "${file.title}" ?`)) {
             deleteFile(file.id);
+        }
+    }
+
+    const handleItemClick = (item: IFile) => {
+        // 点击了 listItem
+        // 1. 判断是否存在 openedFilesId 中
+        //  1.1 如果存在则将 activeId 设置为该 itemId
+        //  1.2 如果不存在则将该 itemId push 到 activeId 后面，并设置 activeId 为该 itemId
+
+        if (new Set(openedFilesId).has(item.id)) {
+            updateActivedId(item.id);
+        } else {
+            // 如果 tabList 为空
+            updateActivedId(item.id);
+            openFile(item.id);
         }
     }
 
@@ -139,21 +166,43 @@ const FileList: React.FC<IFileListProps> = (props) => {
     }, [filterIds, fileList]);
 
     useEffect(() => {
-        if (!isSearch) {
+        if (!isFileSearch) {
             setList(fileList);
         }
-    }, [isSearch])
+    }, [isFileSearch])
 
     return (
         <div className='fileList-container'>
             <List
                 className='fileList'
+                locale={{ emptyText: 
+                    <div className="ant-list-empty-text">
+                        <div className="ant-empty ant-empty-normal">
+                            <div className="ant-empty-image">
+                                <svg className="ant-empty-img-simple" width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg">
+                                    <g transform="translate(0 1)" fill="none" fillRule="evenodd">
+                                        <ellipse className="ant-empty-img-simple-ellipse" cx="32" cy="33" rx="32" ry="7">
+                                        </ellipse>
+                                        <g className="ant-empty-img-simple-g" fillRule="nonzero">
+                                            <path d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z">
+                                            </path>
+                                            <path d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z" className="ant-empty-img-simple-path">
+                                            </path>
+                                        </g>
+                                    </g>
+                                </svg>
+                            </div>
+                            <div className="ant-empty-description">
+                                No files found. You can press <span style={{ fontSize: '16px', fontWeight: 'bold' }}>Esc</span> or click <span style={{ fontSize: '18px', fontWeight: 'bold' }}>x</span> to exit search status.
+                            </div>
+                        </div>
+                    </div> }}
                 dataSource={list}
                 renderItem={(item: IFile) => (
                     <List.Item
                         className='fileList-item'
                         key={item.id}
-                        onClick={() => { }}
+                        onClick={() => { handleItemClick(item) }}
                     >
                         {/* <Link></Link> */}
                         <List.Item.Meta
@@ -206,18 +255,24 @@ const FileList: React.FC<IFileListProps> = (props) => {
 }
 
 
-const mapStateToProps = (state: IRootState): IMappedState => ({
-    fileList: state.left.fileList,
-    isSearch: state.left.isFileSearch,
-    filterIds: state.left.filterIds
+
+const mapStateToProps = (state: IState): IMappedState => ({
+
+    fileList: state.fileList,
+    isFileSearch: state.isFileSearch,
+    filterIds: state.filterIds,
+    openedFilesId: state.openedFilesId,
+    activedId: state.activedId,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch): IMappedAction => ({
+const mapDispatchToProps = (dispatch: Dispatch): IMappedDispatch => ({
     deleteFile: (id: IdPayload) => dispatch(deleteFile(id)),
     editFileName: (editedFile: NewNamePayload) => dispatch(editFileName(editedFile)),
     newFile: (initName: NewFilePayload) => dispatch(newFile(initName)),
     openFile: (id: IdPayload) => dispatch(openFile(id)),
     updateFilterIds: (ids: IdPayload[]) => dispatch(updateFilterIds(ids)),
+    updateActivedId: (id: IdPayload) => dispatch(updateActivedId(id)),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FileList);

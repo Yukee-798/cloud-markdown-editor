@@ -1,6 +1,12 @@
 .tabList-container {
     height: 100%;
 
+    .empty-tab-background {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
     // padding-left: 10px;
     .ant-tabs {
         height: 100%;
