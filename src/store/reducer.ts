@@ -9,7 +9,9 @@ export interface IState {
 
     openedFilesId: string[];
     unSavedFilesId: string[];
+    activedId: string;
 }
+
 
 
 const mockData = mockFiles(5);
@@ -20,17 +22,24 @@ const initState: IState = {
     isFileSearch: false,
 
     openedFilesId: [],
-    unSavedFilesId: []
+    unSavedFilesId: [],
+    activedId: '0'
 }
 
 export default function left(state: IState = initState, action: IAction) {
     const { type, payload } = action;
     switch (type) {
 
+        case ActionTypes.UpdateActivedId:
+            return {
+                ...state,
+                activedId: payload
+            }
+
         case ActionTypes.OpenFile:
             return {
                 ...state,
-                openedFileId: [...state.openedFilesId, payload]
+                openedFilesId: [...state.openedFilesId, payload]
             }
 
         case ActionTypes.CloseTab:

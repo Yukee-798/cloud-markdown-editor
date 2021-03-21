@@ -7,6 +7,8 @@ import {
 } from "../types";
 
 
+export const updateActivedId = (payload: IdPayload) => ({type: ActionTypes.UpdateActivedId, payload});
+
 export const updateFilterIds = (payload: IdPayload[]) => ({ type: ActionTypes.UpdateFilterIds, payload });
 
 export const editFileName = (payload: NewNamePayload) => ({ type: ActionTypes.EditFileName, payload });
@@ -15,6 +17,7 @@ export const deleteFile = (payload: IdPayload) => ({ type: ActionTypes.DeleteFil
 export const fileSearch = () => ({ type: ActionTypes.FileSearch });
 export const exitFileSearch = () => ({ type: ActionTypes.ExitFileSearch });
 
+
 export const openFile = (payload: IdPayload) => ({ type: ActionTypes.OpenFile, payload });
 
 export const newFile = (payload: NewFilePayload) => ({ type: ActionTypes.NewFile, payload });
@@ -22,10 +25,6 @@ export const newFile = (payload: NewFilePayload) => ({ type: ActionTypes.NewFile
 
 // 暂时先不做
 export const importFiles = () => ({ type: ActionTypes.ImportFiles })
-
-
-
-
 export const editFile = (payload: IdPayload) => ({
     type: ActionTypes.EditFile,
     payload
