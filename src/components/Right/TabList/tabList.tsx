@@ -120,46 +120,48 @@ const TabList: React.FC<ITabListProps> = (props) => {
                     >
                         <Button type="primary">Create Now</Button>
                     </Empty> :
-                    <Tabs
-                        // animated
-                        hideAdd
-                        type="editable-card"
-                        activeKey={activedId}
-                        onTabClick={(key: string) => { updateActivedId(key) }}
-                        onEdit={handleEdit}
-                    >
+                    <>
+                        <Tabs
+                            // animated
+                            hideAdd
+                            type="editable-card"
+                            activeKey={activedId}
+                            onTabClick={(key: string) => { updateActivedId(key) }}
+                            onEdit={handleEdit}
+                        >
 
 
-                        {
-                            tabList.map((tab: ITab) => (
-                                <Tabs.TabPane
-                                    tab={tab.title}
-                                    key={tab.id}
+                            {
+                                tabList.map((tab: ITab) => (
+                                    <Tabs.TabPane
+                                        tab={tab.title}
+                                        key={tab.id}
 
-                                // closeIcon={
-                                //     <FontAwesomeIcon
-                                //         icon={
-                                //             tab.tabStatus === TabStatus.Default ? faTimes :
-                                //                 tab.tabStatus === TabStatus.Actived ? faTimes : faCircle
-                                //         }
+                                    // closeIcon={
+                                    //     <FontAwesomeIcon
+                                    //         icon={
+                                    //             tab.tabStatus === TabStatus.Default ? faTimes :
+                                    //                 tab.tabStatus === TabStatus.Actived ? faTimes : faCircle
+                                    //         }
 
-                                //     />
-                                // }
-                                >
-                                    <SimpleMDE
+                                    //     />
+                                    // }
+                                    >
 
-                                        options={{
-                                            status: false,
-                                            spellChecker: false
-                                        }}
-                                        onChange={onEditorChange}
-                                        value={tab.body}
+                                    </Tabs.TabPane>
+                                ))
+                            }
+                        </Tabs>
+                        <SimpleMDE
 
-                                    />
-                                </Tabs.TabPane>
-                            ))
-                        }
-                    </Tabs>
+                            options={{
+                                status: false,
+                                spellChecker: false
+                            }}
+                            onChange={onEditorChange}
+                            // value={tab.body}
+                        />
+                    </>
 
             }
 
