@@ -15,11 +15,14 @@ app.on('ready', () => {
     let mainWindow = new BrowserWindow({
         width: 1024,
         height: 680,
+        
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true
-        }
+        },
+        minHeight: 680,
+        minWidth: 840
     });
 
     const urlLocation = isDev ? 'http://localhost:3000' : 'dummyurl';
