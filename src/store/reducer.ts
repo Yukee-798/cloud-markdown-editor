@@ -52,7 +52,13 @@ export default function left(state: IState = initState, action: IAction) {
         case ActionTypes.EditFile:
             return {
                 ...state,
-                unSavedFilesId: [...state.unSavedFilesId, payload]
+                unSavedFilesId: [...state.unSavedFilesId, payload.id],
+                fileList: [...state.fileList.map((file: IFile) => {
+                    if (file.id === payload.id) {
+                        return {...file, body: payload.newValue};
+                    }
+                    return file;
+                })]
             };
 
 
