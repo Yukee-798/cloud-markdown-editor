@@ -22,17 +22,23 @@ export const openFile = (payload: IdPayload) => ({ type: ActionTypes.OpenFile, p
 
 export const newFile = (payload: NewFilePayload) => ({ type: ActionTypes.NewFile, payload });
 
-
-// 暂时先不做
-export const importFiles = () => ({ type: ActionTypes.ImportFiles })
-export const editFile = (payload: IdPayload) => ({
+export const editFile = (payload: NewValuePayload) => ({
     type: ActionTypes.EditFile,
     payload
 });
-export const saveFile = (payload: NewValuePayload) => ({
+
+
+// 这里应该是个异步 action，用 saga 使用 nodejs 的 fs 模块来改写硬盘中的文件
+export const saveFile = (payload: IdPayload) => ({
     type: ActionTypes.SaveFile,
     payload
 });
+
+// 暂时先不做
+export const importFiles = () => ({ type: ActionTypes.ImportFiles })
+
+
+
 
 
 // 如果关闭的 tab 在 unSavedFilesId 中，则需要弹窗询问，Do you want to save ...

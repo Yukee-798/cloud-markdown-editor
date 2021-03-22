@@ -1,83 +1,83 @@
 import { IFile, ITab } from "../../types";
-
+import { v4 as uuidv4 } from 'uuid';
 export const mockFiles = (num: number) => {
     let files: IFile[] = [
         {
-            id: '0',
+            id: uuidv4(),
             body: '123',
             title: 'Node.js',
-            createAt: 1232142124124,
-            status: {
-                isOpen: true,
-                isUnsave: false,
-                isActive: true
-            }
+            createAt: 1316415757916,
+            // status: {
+            //     isOpen: true,
+            //     isUnsave: false,
+            //     isActive: true
+            // }
         },
         {
-            id: '1',
+            id: uuidv4(),
             body: '456',
             title: 'Promise',
-            createAt: 1232142124124,
-            status: {
-                isOpen: false,
-                isUnsave: true,
-                isActive: false
-            }
+            createAt: 1216415757916,
+            // status: {
+            //     isOpen: false,
+            //     isUnsave: true,
+            //     isActive: false
+            // }
         },
         {
-            id: '2',
+            id: uuidv4(),
             body: '789',
             title: 'Node',
-            createAt: 1232142124124,
-            status: {
-                isOpen: true,
-                isUnsave: false,
-                isActive: false
-            }
+            createAt: 1416415757916,
+            // status: {
+            //     isOpen: true,
+            //     isUnsave: false,
+            //     isActive: false
+            // }
         },
         {
-            id: '3',
+            id: uuidv4(),
             body: '## webpack \n test  webpack  webpack webpack webpack webpack webpack webpack webpack webpack webpack webpack webpack',
             title: 'webpack',
-            createAt: 1232142124124,
-            status: {
-                isOpen: true,
-                isUnsave: false,
-                isActive: false
-            }
+            createAt: 1116415757916,
+            // status: {
+            //     isOpen: true,
+            //     isUnsave: false,
+            //     isActive: false
+            // }
         },
         {
-            id: '4',
+            id: uuidv4(),
             body: '## React.js \n test test testest testtest testtest testtest testtest testtest testtest testt testtest testtest testtest testtest testtest testtest testtest testtest testtest testtest test',
             title: 'React.js',
-            createAt: 1231241241214,
-            status: {
-                isOpen: true,
-                isUnsave: false,
-                isActive: false
-            }
+            createAt: 1016415757916,
+            // status: {
+            //     isOpen: true,
+            //     isUnsave: false,
+            //     isActive: false
+            // }
         },
         {
-            id: '5',
+            id: uuidv4(),
             body: '## Vue.js \n 12312 Vue vvvvvvvvvvvvsv test testtesttesttesttesttesttesttesttesttesttest',
             title: 'Vue.js',
-            createAt: 1231241241214,
-            status: {
-                isOpen: true,
-                isUnsave: false,
-                isActive: false
-            }
+            createAt: 1916415757916,
+            // status: {
+            //     isOpen: true,
+            //     isUnsave: false,
+            //     isActive: false
+            // }
         },
         {
-            id: '6',
+            id: uuidv4(),
             body: '## Next.js \n asd 1asd next 3412412e2next next next next next next next next next next next next next next next ',
             title: 'Next.js',
-            createAt: 1231241241214,
-            status: {
-                isOpen: true,
-                isUnsave: false,
-                isActive: false
-            }
+            createAt: 1216215747916,
+            // status: {
+            //     isOpen: true,
+            //     isUnsave: false,
+            //     isActive: false
+            // }
         },
     ];
     // for (let i = 0; i < num; i++) {

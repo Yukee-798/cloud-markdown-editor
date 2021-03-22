@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { IAction, IFile, ActionTypes } from '../types'
 import { mockFiles } from '../utils/dev';
 
@@ -26,9 +27,23 @@ const initState: IState = {
     activedId: '0'
 }
 
-export default function left(state: IState = initState, action: IAction) {
+export default function left(state: IState = initState, action: IAction): IState {
     const { type, payload } = action;
     switch (type) {
+
+        case ActionTypes.NewFile:
+            return {
+                ...state,
+                fileList: [
+                    {
+                        title: payload,
+                        id: uuidv4(),
+                        body: '',
+                        createAt: new Date().getTime(),
+                    },
+                    ...state.fileList
+                ]
+            }
 
         case ActionTypes.UpdateActivedId:
             return {
@@ -55,7 +70,7 @@ export default function left(state: IState = initState, action: IAction) {
                 unSavedFilesId: [...state.unSavedFilesId, payload.id],
                 fileList: [...state.fileList.map((file: IFile) => {
                     if (file.id === payload.id) {
-                        return {...file, body: payload.newValue};
+                        return { ...file, body: payload.newValue };
                     }
                     return file;
                 })]
@@ -99,19 +114,19 @@ export default function left(state: IState = initState, action: IAction) {
                 })
             }
 
-        case ActionTypes.SaveFile:
-            return {
-                ...state,
-                FileList: state.fileList.map((file: IFile) => {
-                    if (file.id === payload.id) {
-                        return { ...file, body: payload.newValue };
-                    }
-                    return file;
-                }),
-                unSavedFilesId: state.unSavedFilesId.filter((id) => id !== payload.id)
+        // case ActionTypes.SaveFile:
+        //     return {
+        //         ...state,
+        //         FileList: state.fileList.map((file: IFile) => {
+        //             if (file.id === payload.id) {
+        //                 return { ...file, body: payload.newValue };
+        //             }
+        //             return file;
+        //         }),
+        //         unSavedFilesId: state.unSavedFilesId.filter((id) => id !== payload.id)
 
-            };
-        
+        //     };
+
 
         default:
             return state;
