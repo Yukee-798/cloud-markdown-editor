@@ -1,8 +1,9 @@
 .left-container {
-    border: black 1px solid;
-
+    // border-right: 1px solid black;
+    min-width: 226px;
     .ant-card {
         height: 95%;
+        
 
         .ant-card-head {
             height: 8%;
