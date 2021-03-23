@@ -22,6 +22,19 @@
                 background: rgb(215, 214, 214);
             }
         }
+        .ant-list-item-meta-title {
+            font-size: 16px;
+        }
+
+        .ant-list-item-meta-description {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            -webkit-line-clamp: 2;
+            text-overflow: ellipsis;
+            white-space: pre-line;
+
+        }
     }
 
 }
