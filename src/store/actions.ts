@@ -7,7 +7,7 @@ import {
 } from "../types";
 
 
-export const updateActivedId = (payload: IdPayload) => ({type: ActionTypes.UpdateActivedId, payload});
+export const updateActivedId = (payload: IdPayload) => ({ type: ActionTypes.UpdateActivedId, payload });
 
 export const updateFilterIds = (payload: IdPayload[]) => ({ type: ActionTypes.UpdateFilterIds, payload });
 
@@ -20,12 +20,14 @@ export const exitFileSearch = () => ({ type: ActionTypes.ExitFileSearch });
 
 export const openFile = (payload: IdPayload) => ({ type: ActionTypes.OpenFile, payload });
 
-export const newFile = (payload: NewFilePayload) => ({ type: ActionTypes.NewFile, payload });
+export const newFile = () => ({ type: ActionTypes.NewFile });
+export const newFileFinished = (payload: string) => ({ type: ActionTypes.NewFileFinished, payload })
 
 export const editFile = (payload: NewValuePayload) => ({
     type: ActionTypes.EditFile,
     payload
 });
+
 
 
 // 这里应该是个异步 action，用 saga 使用 nodejs 的 fs 模块来改写硬盘中的文件

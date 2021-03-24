@@ -19,7 +19,7 @@ export interface IState {
 const mockData = mockFiles(5);
 
 const initState: IState = {
-    fileList: mockData,
+    fileList: [],
     filterIds: [],
     isFileSearch: false,
 
