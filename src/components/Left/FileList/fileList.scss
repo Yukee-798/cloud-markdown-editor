@@ -14,6 +14,7 @@
         }
         .fileList-item {
             padding: 12px 10px 12px 10px;
+            min-height: 70px;
             &:hover {
                 cursor: pointer;
                 background: rgb(215, 214, 214);
@@ -22,7 +23,17 @@
                 background: rgb(215, 214, 214);
             }
         }
+
+/* position: 'absolute', zIndex: 10000, width: '165px' */
+        .list-item-meta-title-warp {
+            position: absolute;
+            z-index: 10000;
+            width: 75%;
+
+        }
+
         .ant-list-item-meta-title {
+            position: relative;
             font-size: 16px;
         }
 

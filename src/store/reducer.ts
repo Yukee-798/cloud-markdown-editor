@@ -11,6 +11,7 @@ export interface IState {
     openedFilesId: string[];
     unSavedFilesId: string[];
     activedId: string;
+    isNewingFile: boolean;
 }
 
 
@@ -24,7 +25,8 @@ const initState: IState = {
 
     openedFilesId: [],
     unSavedFilesId: [],
-    activedId: '0'
+    activedId: '0',
+    isNewingFile: false
 }
 
 export default function left(state: IState = initState, action: IAction): IState {
@@ -34,9 +36,10 @@ export default function left(state: IState = initState, action: IAction): IState
         case ActionTypes.NewFile:
             return {
                 ...state,
+                isNewingFile: true,
                 fileList: [
                     {
-                        title: payload,
+                        title: undefined,
                         id: uuidv4(),
                         body: '',
                         createAt: new Date().getTime(),
@@ -99,13 +102,15 @@ export default function left(state: IState = initState, action: IAction): IState
 
             return {
                 ...state,
-                fileList: state.fileList.filter((file: IFile) => file.id !== payload)
+                fileList: state.fileList.filter((file: IFile) => file.id !== payload),
+                isNewingFile: false
             };
 
         case ActionTypes.EditFileName:
 
             return {
                 ...state,
+                isNewingFile: false,
                 fileList: state.fileList.map((file: IFile) => {
                     if (file.id === payload.id) {
                         return { ...file, title: payload.newName };
