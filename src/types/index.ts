@@ -1,6 +1,13 @@
 import React, { CSSProperties } from "react";
 import { IState } from "../store/reducer";
 
+const { remote } = window.require('electron');
+
+
+// 存放文档的根目录
+export const SAVE_LOCATION = remote.app.getPath('documents');
+
+
 export interface IBaseProps {
     className?: string;
     children?: React.ReactNode;
@@ -11,14 +18,9 @@ export interface IBaseProps {
 
 export interface IFile {
     id: string;
-    title: string;
+    title: string | undefined;
     body: string;
     createAt: number;
-    status: {
-        isOpen: boolean;
-        isUnsave: boolean;
-        isActive: boolean;
-    }
 }
 
 
@@ -45,11 +47,21 @@ export type NewFilePayload = IdPayload;
 
 
 export enum KeyTypes {
-    Esc = 'Escape',
-    Enter = 'Enter'
+    Escape = 'Escape',
+    Enter = 'Enter',
+    s = 's',
+    Meta = 'Meta'
+}
+
+export enum AlterMsgTypes {
+    EmptyAlert = 'A file or folder name must be provided.',
+    ExistedName = 'A file or folder name already exists at this location.',
+    WhiteSpaceErr = 'Leading or trailing whitespace detected in file or folder name.',
+    NullMsg = ''
 }
 
 export enum ActionTypes {
+    NewFileFinished = 'newFileFinished',
     UpdateActivedId = 'updateActivedId',
     CloseTab = 'closeTab',
     UpdateFilterIds = 'updateFilterIds', // 搜索过滤文件
@@ -71,7 +83,8 @@ export enum StateTypes {
     IsFileSearch = 'isFileSearch',
     OpenedFilesId = 'openedFilesId',
     UnSavedFilesId = 'unSavedFilesId',
-    ActivedId = 'activedId'
+    ActivedId = 'activedId',
+    IsNewingFile = 'isNewingFile'
 }
 
 export interface IAllDispatch {
@@ -85,9 +98,10 @@ export interface IAllDispatch {
     exitFileSearch: () => void;
 
     // 暂时先不做
-    editFile: (id: IdPayload) => void;
-    saveFile: (newValue: NewValuePayload) => void;
-    newFile: (initName: NewFilePayload) => void;
+    editFile: (id: NewValuePayload) => void;
+    saveFile: (newValue: IdPayload) => void;
+    newFile: () => void;
+    newFileFinished: (initName: string) => void;
     importFiles: () => void;
 }
 
