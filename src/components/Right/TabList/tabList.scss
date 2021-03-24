@@ -26,16 +26,16 @@
 
                 .editor-toolbar {
                     border-top: none;
-                    border-left: none;
+                    border-radius: 0;
+                    // border-left: none;
                     border-right: none;
+                    border-color: rgb(240, 240, 240);
                 }
 
                 .CodeMirror {
+                    border-color: rgb(240, 240, 240);
                     font-size: 16px;
                     flex-grow: 1;
-                    border-bottom: none;
-                    border-left: none;
-                    border-right: none;
                 }
             }
         }
@@ -45,7 +45,7 @@
         }
 
         .ant-tabs-nav {
-            margin-bottom: 5px;
+            margin-bottom: 2px;
 
         }
 
