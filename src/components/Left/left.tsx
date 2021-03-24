@@ -10,33 +10,32 @@ import { useRef, useState } from 'react';
 import { IState } from '../../store/reducer';
 import { newFile } from '../../store/actions';
 
-// import { remote } from 'electron'
-// import { join } from 'path'
-import {fileHelper} from '../../utils/index'
+
 
 import './left.scss'
 
 
-const {remote} = window.require('electron');
-const {join} = window.require('path');
 
-interface IMappedState {}
 
-interface IMappedDispatch extends Pick<IAllDispatch, 
+interface IMappedState extends Pick<IState,
+    StateTypes.IsNewingFile
+> { }
+
+interface IMappedDispatch extends Pick<IAllDispatch,
     ActionTypes.NewFile
->{}
+> { }
 
-interface ILeftProps extends IBaseProps, IMappedDispatch {
+interface ILeftProps extends IBaseProps, IMappedDispatch, IMappedState {
 
 }
 const Left: React.FC<ILeftProps> = (props) => {
 
     const [searchKey, setSearchKey] = useState<string>();
     const timerRef = useRef<any>();
-    const savedLocation = remote.app.getPath('documents');    
 
     const {
-        newFile
+        newFile,
+        isNewingFile
     } = props;
 
 
@@ -56,9 +55,7 @@ const Left: React.FC<ILeftProps> = (props) => {
 
     const handleNewFile = () => {
         // 在 fileList 的头部插入新的 item 
-
-        fileHelper.writeFile(join(savedLocation, '123.md'), '123')
-        newFile('');
+        newFile();
     }
 
     const handleImport = () => {
@@ -82,7 +79,9 @@ const Left: React.FC<ILeftProps> = (props) => {
             </Card>
 
             <div className='left-footer'>
+                {/* 该按钮在被点击后会进入 isNewingFile 状态，此时按钮无法被点击，但是样式上还是存在 */}
                 <Button
+                    disabled={isNewingFile}
                     onClick={handleNewFile}
                     icon={<FontAwesomeIcon size='lg' icon={faFolderPlus} />}
                 >
@@ -90,6 +89,7 @@ const Left: React.FC<ILeftProps> = (props) => {
                 </Button>
 
                 <Button
+                    // disabled={isNewingFile}
                     onClick={handleImport}
                     icon={<FontAwesomeIcon size='lg' icon={faUpload} />}
                 >
@@ -101,9 +101,11 @@ const Left: React.FC<ILeftProps> = (props) => {
     )
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state: IState): IMappedState => ({
+    isNewingFile: state.isNewingFile
+});
 const mapDispatchToProps = (dispatch: Dispatch): IMappedDispatch => ({
-    newFile: (name: string) => dispatch(newFile(name))
+    newFile: () => dispatch(newFile())
 });
 
-export default connect(mapDispatchToProps, mapDispatchToProps)(Left);
+export default connect(mapStateToProps, mapDispatchToProps)(Left);

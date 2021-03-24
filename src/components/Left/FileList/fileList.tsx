@@ -8,7 +8,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux'
 import Fuse from 'fuse.js'
 import useKeyPress from '../../../hooks/useKeyPress';
-import { deleteFile, editFileName, updateFilterIds, newFile, openFile, updateActivedId, closeTab } from '../../../store/actions';
+import { deleteFile, editFileName, updateFilterIds, newFile, openFile, updateActivedId, closeTab, newFileFinished } from '../../../store/actions';
 import { difference } from '../../../utils/index'
 import { IState } from '../../../store/reducer';
 
@@ -31,6 +31,7 @@ interface IMappedDispatch extends Pick<
     ActionTypes.EditFileName |
     ActionTypes.DeleteFile |
     ActionTypes.NewFile |
+    ActionTypes.NewFileFinished |
     ActionTypes.OpenFile |
     ActionTypes.UpdateFilterIds |
     ActionTypes.CloseTab
@@ -62,7 +63,8 @@ const FileList: React.FC<IFileListProps> = (props) => {
         newFile,
         openFile,
         updateFilterIds,
-        closeTab
+        closeTab,
+        newFileFinished
     } = props;
 
     const editInputRef = useRef(new Input({ defaultValue: '' }));
@@ -71,12 +73,14 @@ const FileList: React.FC<IFileListProps> = (props) => {
     const [editedId, setEditedId] = useState('');
     // 表示fileList 正渲染的 list
     const [list, setList] = useState<IFile[]>([]);
-    const isEsc = useKeyPress(KeyTypes.Esc);
-    const isEnter = useKeyPress(KeyTypes.Enter);
+    const isEsc = useKeyPress([KeyTypes.Escape]);
+    const isEnter = useKeyPress([KeyTypes.Enter]);
     const [isAlert, setIsAlter] = useState(false);
     const [alertMsg, setAlertMsg] = useState<AlterMsgTypes>(AlterMsgTypes.NullMsg);
 
+    // const isSaved = useKeyPress([KeyTypes.s, KeyTypes.Meta]);
 
+    console.log(isEsc);
 
     useEffect(() => {
         if (isNewingFile) {
@@ -133,7 +137,7 @@ const FileList: React.FC<IFileListProps> = (props) => {
         } else {
             return list.filter((file) => file.id !== editedId).map((file) => file.title).includes(value);
         }
-        
+
     }
 
     const validateListen = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,14 +161,17 @@ const FileList: React.FC<IFileListProps> = (props) => {
         const input = editInputRef.current;
         const inputValue = input.state.value;
 
-        // 如果是新建文件的时候失去焦点
+        // 如果是新建文件状态下失去焦点
         if (!file.title) {
-            // 如果输入的内容无效则 Esc 的时候删除该文件、Enter 的时候是无效的
+            // 如果输入的内容无效则 Esc 的时候删除该文件
             if (inputValue === undefined || isAlert) {
                 deleteFile(list[0].id);
 
+            } else {
+                editFileName({ id: file.id, newName: input.state.value });
+                newFileFinished(inputValue);
             }
-            editFileName({ id: file.id, newName: input.state.value });
+
         } else {
             if (!isAlert) {
                 if (!(input.state.value === file.title) && window.confirm(`Rename to "${input.state.value}" ?`)) {
@@ -375,7 +382,8 @@ const mapStateToProps = (state: IState): IMappedState => ({
 const mapDispatchToProps = (dispatch: Dispatch): IMappedDispatch => ({
     deleteFile: (id: IdPayload) => dispatch(deleteFile(id)),
     editFileName: (editedFile: NewNamePayload) => dispatch(editFileName(editedFile)),
-    newFile: (initName: NewFilePayload) => dispatch(newFile(initName)),
+    newFile: () => dispatch(newFile()),
+    newFileFinished: (initName: string) => dispatch(newFileFinished(initName)),
     openFile: (id: IdPayload) => dispatch(openFile(id)),
     updateFilterIds: (ids: IdPayload[]) => dispatch(updateFilterIds(ids)),
     updateActivedId: (id: IdPayload) => dispatch(updateActivedId(id)),

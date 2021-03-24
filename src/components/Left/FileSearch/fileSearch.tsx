@@ -32,7 +32,7 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
     } = props;
 
     const inputRef = useRef<Input>(null);
-    const isEsc = useKeyPress(KeyTypes.Esc);
+    const isEsc = useKeyPress([KeyTypes.Escape]);
     const [value, setValue] = useState('');
 
 
