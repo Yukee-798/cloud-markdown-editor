@@ -9,11 +9,14 @@ import { connect } from 'react-redux';
 import { useRef, useState } from 'react';
 import { IState } from '../../store/reducer';
 import { newFile } from '../../store/actions';
-
-
-
 import './left.scss'
 
+// const Store = window.require('electron-store');
+
+// const store = new Store();
+
+// store.set('key', 123);
+// console.log(store.get('key'));
 
 
 

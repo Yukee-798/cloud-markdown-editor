@@ -1,6 +1,8 @@
 import React, { CSSProperties } from "react";
-import { IState } from "../store/reducer";
 
+// import * as electron from 'electron'
+
+// electron.remote.app
 const { remote } = window.require('electron');
 
 
@@ -98,8 +100,8 @@ export interface IAllDispatch {
     exitFileSearch: () => void;
 
     // 暂时先不做
-    editFile: (id: NewValuePayload) => void;
-    saveFile: (newValue: IdPayload) => void;
+    editFile: (newValue: NewValuePayload) => void;
+    saveFile: (id: IdPayload) => void;
     newFile: () => void;
     newFileFinished: (initName: string) => void;
     importFiles: () => void;

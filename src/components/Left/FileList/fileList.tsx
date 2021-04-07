@@ -7,12 +7,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux'
 import Fuse from 'fuse.js'
-import useKeyPress from '../../../hooks/useKeyPress';
-import { deleteFile, editFileName, updateFilterIds, newFile, openFile, updateActivedId, closeTab, newFileFinished } from '../../../store/actions';
+import useKeyPress from '../../../utils/hooks/useKeyPress';
+import { deleteFile, editFileName, updateFilterIds, newFile, openFile, updateActivedId, closeTab, newFileFinished, saveFile } from '../../../store/actions';
 import { difference } from '../../../utils/index'
 import { IState } from '../../../store/reducer';
-
 import './fileList.scss'
+
 
 
 interface IMappedState extends Pick<
@@ -34,7 +34,8 @@ interface IMappedDispatch extends Pick<
     ActionTypes.NewFileFinished |
     ActionTypes.OpenFile |
     ActionTypes.UpdateFilterIds |
-    ActionTypes.CloseTab
+    ActionTypes.CloseTab |
+    ActionTypes.SaveFile
 > { }
 
 interface IFileListProps extends IBaseProps, IMappedState, IMappedDispatch {
@@ -55,11 +56,14 @@ const FileList: React.FC<IFileListProps> = (props) => {
         filterIds,
         openedFilesId,
         isNewingFile,
+        activedId,
+
 
         // action
         updateActivedId,
         editFileName,
         deleteFile,
+        saveFile,
         newFile,
         openFile,
         updateFilterIds,
@@ -75,12 +79,21 @@ const FileList: React.FC<IFileListProps> = (props) => {
     const [list, setList] = useState<IFile[]>([]);
     const isEsc = useKeyPress([KeyTypes.Escape]);
     const isEnter = useKeyPress([KeyTypes.Enter]);
+
     const [isAlert, setIsAlter] = useState(false);
     const [alertMsg, setAlertMsg] = useState<AlterMsgTypes>(AlterMsgTypes.NullMsg);
 
-    // const isSaved = useKeyPress([KeyTypes.s, KeyTypes.Meta]);
 
-    console.log(isEsc);
+
+
+    // console.log(isSaved);
+    // useEffect(() => {
+    //     if (isSaved) {
+    //         saveFile(activedId);
+    //         console.log('保存成功！');
+    //     }
+    // }, [isSaved])
+
 
     useEffect(() => {
         if (isNewingFile) {
@@ -387,7 +400,8 @@ const mapDispatchToProps = (dispatch: Dispatch): IMappedDispatch => ({
     openFile: (id: IdPayload) => dispatch(openFile(id)),
     updateFilterIds: (ids: IdPayload[]) => dispatch(updateFilterIds(ids)),
     updateActivedId: (id: IdPayload) => dispatch(updateActivedId(id)),
-    closeTab: (id: IdPayload) => dispatch(closeTab(id))
+    closeTab: (id: IdPayload) => dispatch(closeTab(id)),
+    saveFile: (id) => dispatch(saveFile(id))
 
 });
 

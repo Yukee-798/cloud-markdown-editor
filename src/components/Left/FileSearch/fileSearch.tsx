@@ -4,7 +4,7 @@ import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { Button, Tooltip, Input } from 'antd';
 import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
-import useKeyPress from '../../../hooks/useKeyPress';
+import useKeyPress from '../../../utils/hooks/useKeyPress';
 import { ActionTypes, IAllDispatch, IBaseProps, KeyTypes, StateTypes } from '../../../types'
 import { exitFileSearch, fileSearch } from '../../../store/actions';
 import { IState } from '../../../store/reducer';

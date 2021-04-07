@@ -2,7 +2,7 @@ import { Button, Empty, Tabs, Modal } from 'antd'
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircle, faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
-import { ActionTypes, IAllDispatch, IBaseProps, IdPayload, IFile, ITab, NewValuePayload, StateTypes } from '../../../types';
+import { ActionTypes, IAllDispatch, IBaseProps, IdPayload, IFile, ITab, KeyTypes, NewValuePayload, StateTypes } from '../../../types';
 import { mockFiles } from '../../../utils/dev';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux'
@@ -11,6 +11,7 @@ import SimpleMDE from "react-simplemde-editor";
 import { closeTab, editFile, saveFile, updateActivedId } from '../../../store/actions';
 import { IState } from '../../../store/reducer';
 import './tabList.scss';
+import useKeyPress from '../../../utils/hooks/useKeyPress';
 
 // const { confirm } = Modal;
 
@@ -79,6 +80,9 @@ const TabList: React.FC<ITabListProps> = (props) => {
         createAt: -1
     });
 
+    const isSaved = useKeyPress([KeyTypes.s, KeyTypes.Meta]);
+
+
 
 
     const {
@@ -97,6 +101,14 @@ const TabList: React.FC<ITabListProps> = (props) => {
     } = props;
 
 
+    useEffect(() => {
+        if (isSaved) {
+            saveFile(activedId)
+        }
+    }, [isSaved])
+
+
+
 
     useEffect(() => {
         // openedFilesId 存放的顺序就是 tabList 渲染的顺序
@@ -104,7 +116,7 @@ const TabList: React.FC<ITabListProps> = (props) => {
             return fileList.find((file: IFile) => file.id === id);
         });
         setTabList(newTabList as IFile[])
-    }, [openedFilesId])
+    }, [openedFilesId, fileList]);
 
     useEffect(() => {
         setActivedTabInfo(fileList.find(file => file.id === activedId) as ITab);
@@ -147,7 +159,7 @@ const TabList: React.FC<ITabListProps> = (props) => {
     const onEditorChange = (value: string) => {
         // 如果文件的 body 发生了变化则将该文件状态设置为 unsaved
         if (value !== activedTabInfo?.body) {
-            editFile({id: activedId, newValue: value});
+            editFile({ id: activedId, newValue: value });
         }
         console.log(value);
 
@@ -206,8 +218,10 @@ const TabList: React.FC<ITabListProps> = (props) => {
                             value={activedTabInfo?.body}
                         />
                     </>
-
             }
+
+
+
 
 
         </div>

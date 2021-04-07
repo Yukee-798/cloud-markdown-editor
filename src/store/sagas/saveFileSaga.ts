@@ -6,17 +6,16 @@ import { IState } from '../reducer';
 const { join } = window.require('path');
 
 export default function* saveFileSaga() {
-    yield takeEvery(ActionTypes.EditFile, function* (action: IAction) {
-        const { payload: { id, newValue } } = action;
+    yield takeEvery(ActionTypes.SaveFile, function* (action: IAction) {
+        const { payload } = action;
         const { fileList }: { fileList: IFile[] } = yield select((state: IState) => ({
             fileList: state.fileList
         }));
-
-        const targetFileName = fileList.find(file => file.id === id)?.title;
+        const targetFile: IFile = fileList.find(file => file.id === payload) as IFile;
 
         try {
-            const res = yield call(fileHelper.writeFile, join(SAVE_LOCATION, targetFileName), newValue);
-            console.log('保存成功！', res);
+            yield call(fileHelper.writeFile, join(SAVE_LOCATION, targetFile.title), targetFile.body);
+            console.log('保存成功！');
         } catch (err) {
             console.log(err);
         }
