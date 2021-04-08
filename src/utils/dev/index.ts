@@ -1,5 +1,7 @@
-import { IFile, ITab } from "../../types";
+import { IFile, ITab, SAVE_LOCATION } from "../../types";
 import { v4 as uuidv4 } from 'uuid';
+
+const path = window.require('path');
 export const mockFiles = (num: number) => {
     let files: IFile[] = [
         {
@@ -7,6 +9,7 @@ export const mockFiles = (num: number) => {
             body: '123',
             title: 'Node.js',
             createAt: 1316415757916,
+            path: path.join(SAVE_LOCATION, 'Node.js')
             // status: {
             //     isOpen: true,
             //     isUnsave: false,
@@ -18,6 +21,7 @@ export const mockFiles = (num: number) => {
             body: '456',
             title: 'Promise',
             createAt: 1216415757916,
+            path: path.join(SAVE_LOCATION, 'Promise')
             // status: {
             //     isOpen: false,
             //     isUnsave: true,
@@ -29,6 +33,7 @@ export const mockFiles = (num: number) => {
             body: '789',
             title: 'Node',
             createAt: 1416415757916,
+            path: path.join(SAVE_LOCATION, 'Node')
             // status: {
             //     isOpen: true,
             //     isUnsave: false,
@@ -40,6 +45,7 @@ export const mockFiles = (num: number) => {
             body: '## webpack \n test  webpack  webpack webpack webpack webpack webpack webpack webpack webpack webpack webpack webpack',
             title: 'webpack',
             createAt: 1116415757916,
+            path: path.join(SAVE_LOCATION, 'webpack')
             // status: {
             //     isOpen: true,
             //     isUnsave: false,
@@ -51,6 +57,7 @@ export const mockFiles = (num: number) => {
             body: '## React.js \n test test testest testtest testtest testtest testtest testtest testtest testt testtest testtest testtest testtest testtest testtest testtest testtest testtest testtest test',
             title: 'React.js',
             createAt: 1016415757916,
+            path: path.join(SAVE_LOCATION, 'React.js')
             // status: {
             //     isOpen: true,
             //     isUnsave: false,
@@ -62,6 +69,7 @@ export const mockFiles = (num: number) => {
             body: '## Vue.js \n 12312 Vue vvvvvvvvvvvvsv test testtesttesttesttesttesttesttesttesttesttest',
             title: 'Vue.js',
             createAt: 1916415757916,
+            path: path.join(SAVE_LOCATION, 'Vue.js')
             // status: {
             //     isOpen: true,
             //     isUnsave: false,
@@ -73,6 +81,7 @@ export const mockFiles = (num: number) => {
             body: '## Next.js \n asd 1asd next 3412412e2next next next next next next next next next next next next next next next ',
             title: 'Next.js',
             createAt: 1216215747916,
+            path: path.join(SAVE_LOCATION, 'Next.js')
             // status: {
             //     isOpen: true,
             //     isUnsave: false,
