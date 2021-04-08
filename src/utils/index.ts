@@ -3,7 +3,7 @@
 // import * as path from 'path';
 // import Store from 'electron-store';
 
-import { IFile } from "../types";
+import { IFile, IFileList } from "../types";
 
 const pfs = window.require('fs').promises;
 
@@ -55,9 +55,13 @@ export const judgeSetEqual = (set1: Set<any>, set2: Set<any>) => {
 
 
 export const flattenFiles = (files: IFile[]) => {
-    return files.reduce((map, current) => {
-        return { ...map, [current.id]: current }
+    return files.reduce((res, current) => {
+        return { ...res, [current.id]: current }
     }, {});
+}
+
+export const recoverFiles = (files: IFileList) => {
+    return Object.keys(files).map((id: string) => (files[id]));
 }
 
 
