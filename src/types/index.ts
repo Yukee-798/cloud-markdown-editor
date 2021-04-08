@@ -16,13 +16,16 @@ export interface IBaseProps {
     style?: CSSProperties
 }
 
-
-
 export interface IFile {
     id: string;
     title: string | undefined;
     body: string;
     createAt: number;
+    path: string;
+}
+
+export type IFileList = {
+    [key: string]: IFile;
 }
 
 
@@ -66,11 +69,8 @@ export enum ActionTypes {
     NewFileFinished = 'newFileFinished',
     UpdateActivedId = 'updateActivedId',
     CloseTab = 'closeTab',
-    UpdateFilterIds = 'updateFilterIds', // 搜索过滤文件
     EditFileName = 'editFileName',
     DeleteFile = 'deleteFile',
-    FileSearch = 'fileSearch', // 进入文件搜索状态
-    ExitFileSearch = 'exitFileSearch', // 退出搜索状态
     NewFile = 'newFile', // 新建文件，涉及 nodejs 展示放着
     ImportFiles = 'importFiles', // 导入文件，涉及 nodejs 暂时放着
 
@@ -92,12 +92,9 @@ export enum StateTypes {
 export interface IAllDispatch {
     closeTab: (id: IdPayload) => void;
     updateActivedId: (id: IdPayload) => void;
-    updateFilterIds: (ids: IdPayload[]) => void;
     deleteFile: (id: IdPayload) => void;
     editFileName: (editedFile: NewNamePayload) => void;
     openFile: (id: IdPayload) => void;
-    fileSearch: () => void;
-    exitFileSearch: () => void;
 
     // 暂时先不做
     editFile: (newValue: NewValuePayload) => void;

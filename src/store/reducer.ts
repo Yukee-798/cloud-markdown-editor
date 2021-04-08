@@ -1,12 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IAction, IFile, ActionTypes } from '../types'
+import { IAction, IFile, ActionTypes, SAVE_LOCATION, IFileList } from '../types'
+import { flattenFiles } from '../utils';
 import { mockFiles } from '../utils/dev';
 
+const path = window.require('path');
+
+
 export interface IState {
-    fileList: IFile[];
-    // 被过滤的 file id
-    filterIds: string[];
-    isFileSearch: boolean;
+    fileList: IFileList;
 
     openedFilesId: string[];
     unSavedFilesId: string[];
@@ -19,9 +20,7 @@ export interface IState {
 const mockData = mockFiles(5);
 
 const initState: IState = {
-    fileList: [],
-    filterIds: [],
-    isFileSearch: false,
+    fileList: flattenFiles(mockData),
 
     openedFilesId: [],
     unSavedFilesId: [],
@@ -34,18 +33,31 @@ export default function left(state: IState = initState, action: IAction): IState
     switch (type) {
 
         case ActionTypes.NewFile:
+
             return {
                 ...state,
                 isNewingFile: true,
-                fileList: [
-                    {
+                fileList: {
+                    ...state.fileList,
+                    [uuidv4()]: {
                         title: undefined,
                         id: uuidv4(),
                         body: '',
                         createAt: new Date().getTime(),
+                        path: path.join(SAVE_LOCATION, '')
                     },
-                    ...state.fileList
-                ]
+                }
+
+                // fileList: [
+                //     {
+                //         title: undefined,
+                //         id: uuidv4(),
+                //         body: '',
+                //         createAt: new Date().getTime(),
+                //         path: path.join(SAVE_LOCATION, '')
+                //     },
+                //     ...state.fileList
+                // ]
             }
 
         case ActionTypes.UpdateActivedId:
@@ -71,38 +83,32 @@ export default function left(state: IState = initState, action: IAction): IState
             return {
                 ...state,
                 unSavedFilesId: [...state.unSavedFilesId, payload.id],
-                fileList: [...state.fileList.map((file: IFile) => {
-                    if (file.id === payload.id) {
-                        return { ...file, body: payload.newValue };
+                fileList: {
+                    ...state.fileList,
+                    [payload.id]: {
+                        ...state.fileList[payload.id],
+                        body: payload.newValue
                     }
-                    return file;
-                })]
-            };
-
-
-        case ActionTypes.UpdateFilterIds:
-            return {
-                ...state,
-                filterIds: [...payload]
-            }
-
-        case ActionTypes.FileSearch:
-            return {
-                ...state,
-                isFileSearch: true
-            };
-
-        case ActionTypes.ExitFileSearch:
-            return {
-                ...state,
-                isFileSearch: false
+                }
+                // fileList: [...state.fileList.map((file: IFile) => {
+                //     if (file.id === payload.id) {
+                //         return { ...file, body: payload.newValue };
+                //     }
+                //     return file;
+                // })]
             };
 
         case ActionTypes.DeleteFile:
 
+
+            delete state.fileList[payload];
+
             return {
                 ...state,
-                fileList: state.fileList.filter((file: IFile) => file.id !== payload),
+                fileList: {
+                    ...state.fileList
+                },
+                // fileList: state.fileList.filter((file: IFile) => file.id !== payload),
                 isNewingFile: false
             };
 
@@ -111,12 +117,20 @@ export default function left(state: IState = initState, action: IAction): IState
             return {
                 ...state,
                 isNewingFile: false,
-                fileList: state.fileList.map((file: IFile) => {
-                    if (file.id === payload.id) {
-                        return { ...file, title: payload.newName };
+                fileList: {
+                    ...state.fileList,
+                    [payload.id]: {
+                        ...state.fileList[payload.id],
+                        title: payload.newName,
+                        path: path.join(SAVE_LOCATION, payload.newName)
                     }
-                    return file;
-                })
+                }
+                // fileList: state.fileList.map((file: IFile) => {
+                //     if (file.id === payload.id) {
+                //         return { ...file, title: payload.newName, path: path.join(SAVE_LOCATION, payload.newName) };
+                //     }
+                //     return file;
+                // })
             }
 
         // case ActionTypes.SaveFile:
