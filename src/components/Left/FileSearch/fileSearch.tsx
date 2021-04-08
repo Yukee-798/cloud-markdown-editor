@@ -2,22 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { Button, Tooltip, Input } from 'antd';
-import { Dispatch } from 'redux'
-import { connect } from 'react-redux'
-import useKeyPress from '../../../utils/hooks/useKeyPress';
-import { ActionTypes, IAllDispatch, IBaseProps, KeyTypes, StateTypes } from '../../../types'
-import { exitFileSearch, fileSearch } from '../../../store/actions';
-import { IState } from '../../../store/reducer';
+import {IBaseProps } from '../../../types'
 import './fileSearch.scss'
 
-interface IMappedState extends Pick<IState, StateTypes.IsFileSearch> {}
 
-interface IMappedAction extends Pick<IAllDispatch, ActionTypes.FileSearch | ActionTypes.ExitFileSearch> {}
-
-interface IFileSearchProps extends IBaseProps, IMappedState, IMappedAction {
+interface IFileSearchProps extends IBaseProps {
     title?: string;
     placeholder?: string;
     onChange?: (value: string) => void;
+    onClick?: () => void;
+    isFileSearch?: boolean;
 }
 
 const FileSearch: React.FC<IFileSearchProps> = (props) => {
@@ -26,30 +20,18 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
         title,
         placeholder,
         isFileSearch,
-        exitFileSearch,
-        fileSearch,
-        onChange
+        onChange,
+        onClick
     } = props;
 
     const inputRef = useRef<Input>(null);
-    const isEsc = useKeyPress([KeyTypes.Escape]);
     const [value, setValue] = useState('');
 
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-
-
         const value = e.target.value;
         onChange?.(value);
         setValue(value);
     }
-
-    useEffect(() => {
-        // 处于搜索状态并且按下 Esc
-        if (isEsc && isFileSearch) {
-            exitFileSearch();
-        }
-    }, [isEsc])
 
     useEffect(() => {
         // 搜索激活的时候，自动让 input focus
@@ -71,7 +53,7 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
                         <Button
                             icon={<FontAwesomeIcon size='lg' icon={faSearch} />}
                             // shape='circle'
-                            onClick={() => fileSearch()}
+                            onClick={onClick}
                         >
                         </Button>
                     </Tooltip>
@@ -88,8 +70,7 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
                     />
                     <Button
                         icon={<FontAwesomeIcon size='lg' icon={faTimes} />}
-                        // shape='circle'
-                        onClick={() => exitFileSearch()}
+                        onClick={onClick}
                     >
                     </Button>
                 </div>
@@ -99,12 +80,5 @@ const FileSearch: React.FC<IFileSearchProps> = (props) => {
     )
 }
 
-const mapStateToProps = (state: IState): IMappedState => ({
-    isFileSearch: state.isFileSearch
-});
-const mapDispatchToProps = (dispatch: Dispatch): IMappedAction => ({
-    fileSearch: () => dispatch(fileSearch()),
-    exitFileSearch: () => dispatch(exitFileSearch())
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(FileSearch);
+export default FileSearch;
