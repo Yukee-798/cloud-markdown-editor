@@ -69,6 +69,11 @@ const Left: React.FC<ILeftProps> = (props) => {
 
 
     useEffect(() => {
+        setList(recoverFiles(fileList));
+    }, [fileList])
+
+
+    useEffect(() => {
         if (isEsc) {
             setIsFileSearch(false);
         }
@@ -89,7 +94,9 @@ const Left: React.FC<ILeftProps> = (props) => {
 
 
     const handleItemClick = (id: string) => {
-        console.log(id);
+        // console.log(id);
+        openFile(id);
+        updateActivedId(id);
     }
 
     /** 监听被点击删除按钮的 item */
@@ -111,20 +118,27 @@ const Left: React.FC<ILeftProps> = (props) => {
      * enter：直接进行重命名
      * 
      */
-    const handleExitRename = (trigger: 'esc' | 'blur' | 'enter', newValue: string) => {
-
+    const handleExitRename = (trigger: 'esc' | 'blur' | 'enter', newValue: string, isValid?: boolean) => {
         if (trigger === 'esc') {
-
+            console.log(123123123);
+            setRenameId(undefined);
         } else if (trigger === 'blur') {
-            if (!window.confirm(`Rename to "${newValue}`)) return;
-            // 执行重命名
-            editFileName({ id: renameId as string, newName: newValue });
+            // 如果失去焦点的时候没有修改文件名或者输入值无效则直接退出编辑状态
+            if (fileList[renameId as string]?.title === newValue || !isValid) {
+                setRenameId(undefined);
+            } else if (window.confirm(`Rename to "${newValue}`) && isValid) {
+                // 执行重命名
+                editFileName({ id: renameId as string, newName: newValue });
+                setRenameId(undefined);
+            }
 
         } else {
-            // 执行重命名
-            editFileName({ id: renameId as string, newName: newValue });
+            if (isValid) {
+                // 执行重命名
+                editFileName({ id: renameId as string, newName: newValue });
+                setRenameId(undefined);
+            }
         }
-        setRenameId(undefined);
     }
 
     const handleImport = () => {
@@ -164,7 +178,6 @@ const Left: React.FC<ILeftProps> = (props) => {
                         onChange={onSearchChange}
                         onClick={() => setIsFileSearch(!isFileSearch)}
                         isFileSearch={isFileSearch}
-
                     />
                 }
             >

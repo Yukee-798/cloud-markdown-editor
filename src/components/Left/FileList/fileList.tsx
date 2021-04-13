@@ -27,7 +27,7 @@ interface IFileListProps extends IBaseProps {
     /** 列表 item 被点击重命名的回调，传入 id */
     onItemRename?: (id: string) => void;
     /** 退出重命名的回调，有 esc，blur，enter 三种情况触发退出重命名，并传入退出时的重命名值 */
-    onExitRename?: (trigger: 'esc' | 'blur' | 'enter', newName: string) => void;
+    onExitRename?: (trigger: 'esc' | 'blur' | 'enter', newName: string, isValid?: boolean) => void;
 
 }
 
@@ -52,7 +52,9 @@ const FileList: React.FC<IFileListProps> = (props) => {
 
     /** 判断重命名的时输入的 value 是否已经存在 */
     const judgeIsExisted = (value: string) => {
-        return source?.map((item) => (item.title)).includes(value);
+        return source?.filter((item) => (item.id !== renameId))
+        .map((item) => (item.title))
+        .includes(value);
     }
 
     /** 验证重命名时的输入是否有效 */
@@ -71,17 +73,27 @@ const FileList: React.FC<IFileListProps> = (props) => {
         }
     }
 
+    /** 当没有 item 处于重命名状态的时候设置为空 msg */
+    useEffect(() => {
+        if (renameId === undefined) {
+            setIsAlter(false);
+            setAlertMsg(AlterMsgTypes.NullMsg);
+        }
+    }, [renameId])
+
     /** 监听是否触发 enter 和 esc 两种退出重命名状态的情况 */
     useEffect(() => {
-        const newValue = editInputRef.current.state.value;
-
+        const newValue = editInputRef?.current?.state.value;
         // 如果按下了 enter 之前验证逻辑处于 alter 状态则 enter 无效
         if (renameId && isEnter) {
-            if (!isAlert) onExitRename?.('enter', newValue);
+
+            onExitRename?.('enter', newValue, !isAlert);
         } else if (renameId && isEsc) {
+            
             onExitRename?.('esc', newValue);
         }
     }, [isEnter, isEsc])
+
 
     /** 当 list 中不存在 renameId 的时候抛出异常 */
     useEffect(() => {
@@ -149,9 +161,7 @@ const FileList: React.FC<IFileListProps> = (props) => {
                                             onClick={(e) => { e.stopPropagation() }}
                                             ref={editInputRef}
                                             onBlur={() => {
-                                                // 如果失去焦点之前验证处于 alert 状态则失去焦点无效
-                                                if (isAlert)
-                                                    onExitRename?.('blur', editInputRef.current.state.value)
+                                                onExitRename?.('blur', editInputRef.current.state.value, !isAlert)
                                             }}
                                             defaultValue={item.title}
                                             onChange={validateListen}
